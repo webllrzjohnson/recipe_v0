@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Libre_Baskerville, Raleway } from 'next/font/google';
 import { ConsentAwareAnalytics } from '@/components/compliance/consent-aware-analytics';
 import { CookieConsentBanner } from '@/components/compliance/cookie-consent-banner';
+import { Toaster } from '@/components/ui/toaster';
 import { getMetadataBase } from '@/lib/seo/site-url';
 import './globals.css';
 
@@ -68,6 +69,7 @@ export default function RootLayout({
         className={`${libreBaskerville.variable} ${raleway.variable} font-sans antialiased`}
       >
         {children}
+        <Toaster />
         <CookieConsentBanner />
         <ConsentAwareAnalytics />
       </body>

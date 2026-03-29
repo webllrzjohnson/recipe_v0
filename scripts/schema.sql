@@ -1,7 +1,8 @@
 -- Sarap Kitchen — full DDL for a new database (Supabase / Postgres).
--- Apply in order: schema.sql → rls.sql → seed.sql (optional).
--- Upgrading an older database missing tables below: scripts/legacy_schema_patches.sql (after rls.sql).
--- Then run bootstrap_admin.sql once per admin user (see file header).
+-- Fresh install (one file): scripts/install_fresh_database.sql → then bootstrap_admin.sql.
+-- Or apply in order: this file → rls.sql → storage.sql → seed.sql (optional).
+-- Upgrading an older database missing tables: legacy_schema_patches.sql (after rls.sql).
+-- Redeploying the Next.js app only (same Supabase): do not re-run SQL.
 
 -- Categories
 CREATE TABLE categories (

@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
+import { AdminImageUploadButton } from '@/components/admin/admin-image-upload-button';
 
 interface StaticAboutEditorProps {
   initialContent: AboutPageStoredContent;
@@ -145,11 +146,19 @@ export function StaticAboutEditor({ initialContent }: StaticAboutEditorProps) {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="ab-story-url">{pagesCopy.imageUrl}</Label>
-            <Input
-              id="ab-story-url"
-              value={storyImageUrl}
-              onChange={(e) => setStoryImageUrl(e.target.value)}
-            />
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Input
+                id="ab-story-url"
+                className="sm:min-w-0 sm:flex-1"
+                value={storyImageUrl}
+                onChange={(e) => setStoryImageUrl(e.target.value)}
+              />
+              <AdminImageUploadButton
+                folder="static-about/story"
+                disabled={loading}
+                onUploaded={setStoryImageUrl}
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="ab-story-h">{pagesCopy.sectionHeading}</Label>
@@ -178,11 +187,19 @@ export function StaticAboutEditor({ initialContent }: StaticAboutEditorProps) {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="ab-mis-url">{pagesCopy.imageUrl}</Label>
-            <Input
-              id="ab-mis-url"
-              value={missionImageUrl}
-              onChange={(e) => setMissionImageUrl(e.target.value)}
-            />
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Input
+                id="ab-mis-url"
+                className="sm:min-w-0 sm:flex-1"
+                value={missionImageUrl}
+                onChange={(e) => setMissionImageUrl(e.target.value)}
+              />
+              <AdminImageUploadButton
+                folder="static-about/mission"
+                disabled={loading}
+                onUploaded={setMissionImageUrl}
+              />
+            </div>
           </div>
           <div className="space-y-2">
             <Label htmlFor="ab-mis-h">{pagesCopy.sectionHeading}</Label>

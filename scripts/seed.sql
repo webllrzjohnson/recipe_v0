@@ -1,6 +1,6 @@
 -- Demo content: categories, recipes, blog post, plus sample notes/nutrition/recipe blog HTML.
 -- Safe to re-run only on a fresh DB (INSERTs will conflict). For resets, TRUNCATE or drop tables first.
--- Run after schema.sql and rls.sql.
+-- Run after install_fresh_database.sql (or schema.sql + rls.sql + storage.sql).
 
 -- Categories
 INSERT INTO categories (slug_en, slug_fr, name_en, name_fr, description_en, description_fr, image_url) VALUES

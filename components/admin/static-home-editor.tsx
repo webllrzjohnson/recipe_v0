@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Loader2 } from 'lucide-react';
+import { AdminImageUploadButton } from '@/components/admin/admin-image-upload-button';
 
 interface StaticHomeEditorProps {
   initialContent: HomePageStoredContent;
@@ -143,12 +144,20 @@ export function StaticHomeEditor({ initialContent }: StaticHomeEditorProps) {
           </div>
           <div className="space-y-2">
             <Label htmlFor="home-image-url">{pagesCopy.imageUrl}</Label>
-            <Input
-              id="home-image-url"
-              value={heroImageUrl}
-              onChange={(e) => setHeroImageUrl(e.target.value)}
-              placeholder="https://…"
-            />
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Input
+                id="home-image-url"
+                className="sm:min-w-0 sm:flex-1"
+                value={heroImageUrl}
+                onChange={(e) => setHeroImageUrl(e.target.value)}
+                placeholder="https://…"
+              />
+              <AdminImageUploadButton
+                folder="static-home"
+                disabled={loading}
+                onUploaded={setHeroImageUrl}
+              />
+            </div>
             <p className="text-xs text-muted-foreground">{pagesCopy.homeImageUrlHint}</p>
           </div>
           <div className="space-y-2">

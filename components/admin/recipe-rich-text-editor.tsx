@@ -7,6 +7,7 @@ import YoutubeEmbed from '@tiptap/extension-youtube';
 import Placeholder from '@tiptap/extension-placeholder';
 import { Toggle } from '@/components/ui/toggle';
 import { Button } from '@/components/ui/button';
+import { AdminImageUploadButton } from '@/components/admin/admin-image-upload-button';
 import { Separator } from '@/components/ui/separator';
 import {
   Bold,
@@ -189,10 +190,18 @@ export function RecipeRichTextEditor({
           size="sm"
           className="h-8 px-2"
           onClick={addImage}
-          aria-label="Insert image"
+          aria-label="Insert image from URL"
         >
           <ImageIcon className="h-4 w-4" />
         </Button>
+        <AdminImageUploadButton
+          folder="recipe-blog"
+          variant="ghost"
+          size="sm"
+          showLabel={false}
+          className="h-8 px-2"
+          onUploaded={(url) => editor.chain().focus().setImage({ src: url }).run()}
+        />
         <Button
           type="button"
           variant="ghost"

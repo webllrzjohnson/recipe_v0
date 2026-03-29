@@ -1,4 +1,5 @@
 -- Row level security and policies (run after schema.sql).
+-- Included in install_fresh_database.sql for a one-shot new database setup.
 
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;

@@ -19,6 +19,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Plus, X } from 'lucide-react';
 import { RecipeRichTextEditor } from '@/components/admin/recipe-rich-text-editor';
+import { AdminImageUploadButton } from '@/components/admin/admin-image-upload-button';
 import type { Category, Recipe } from '@/lib/types/database';
 
 const admin = copy.admin;
@@ -261,12 +262,20 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
 
           <div className="space-y-2">
             <Label htmlFor="imageUrl">Image URL</Label>
-            <Input
-              id="imageUrl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://example.com/image.jpg"
-            />
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Input
+                id="imageUrl"
+                className="sm:min-w-0 sm:flex-1"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://example.com/image.jpg"
+              />
+              <AdminImageUploadButton
+                folder="recipes"
+                disabled={loading}
+                onUploaded={setImageUrl}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

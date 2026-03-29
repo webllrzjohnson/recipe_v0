@@ -144,6 +144,14 @@
     "recentActivity": "Recent Activity",
     "dashboardWelcome": "Welcome to the admin dashboard",
     "noRecentActivity": "No recent activity",
+    "imageUpload": {
+      "label": "Upload",
+      "uploading": "Uploading…",
+      "success": "Image uploaded.",
+      "invalidType": "Use JPEG, PNG, WebP, or GIF.",
+      "tooLarge": "Image must be 8 MB or smaller.",
+      "failed": "Could not upload image. Ensure the cms-uploads bucket exists (see scripts/storage.sql)."
+    },
     "goHome": "View site",
     "categoriesSubtitle": "Manage your recipe categories",
     "allCategoriesList": "All categories",

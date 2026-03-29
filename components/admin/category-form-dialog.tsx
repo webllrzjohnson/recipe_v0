@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Plus, Pencil, Loader2 } from 'lucide-react';
 import type { Category } from '@/lib/types/database';
+import { AdminImageUploadButton } from '@/components/admin/admin-image-upload-button';
 
 interface CategoryFormDialogProps {
   category?: Category;
@@ -189,12 +190,20 @@ export function CategoryFormDialog({
 
           <div className="space-y-2">
             <Label htmlFor="imageUrl">Image URL</Label>
-            <Input
-              id="imageUrl"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://example.com/image.jpg"
-            />
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Input
+                id="imageUrl"
+                className="sm:min-w-0 sm:flex-1"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://example.com/image.jpg"
+              />
+              <AdminImageUploadButton
+                folder="categories"
+                disabled={loading}
+                onUploaded={setImageUrl}
+              />
+            </div>
           </div>
 
           <div className="flex justify-end gap-2">

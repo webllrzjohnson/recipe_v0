@@ -1,4 +1,4 @@
--- Grant admin UI access to an existing Auth user.
+-- Grant admin UI access to an existing Auth user (run after install_fresh_database.sql).
 -- 1. Supabase Dashboard → Authentication → Users → open your user → copy "User UID".
 -- 2. Replace the placeholders below (id + email must match that user).
 -- 3. Run in SQL Editor (runs with elevated privileges; safe for one-off bootstrap).
