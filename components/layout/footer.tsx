@@ -7,7 +7,15 @@ import { ChefHat, Facebook, Instagram, Youtube } from 'lucide-react';
 const common = copy.common;
 const footer = copy.footer;
 
-export function Footer() {
+export function Footer({
+  siteName,
+  siteTagline,
+}: {
+  siteName?: string;
+  siteTagline?: string | null;
+}) {
+  const brand = siteName?.trim() || common.siteName;
+  const tag = siteTagline?.trim() || null;
   const quickLinks = [
     { href: '/', label: common.home },
     { href: '/recipes', label: common.recipes },
@@ -37,9 +45,10 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <ChefHat className="h-8 w-8 text-primary" />
               <span className="font-serif text-xl font-bold text-foreground">
-                {common.siteName}
+                {brand}
               </span>
             </div>
+            {tag ? <p className="text-sm font-medium text-primary/90">{tag}</p> : null}
             <p className="text-sm text-muted-foreground">{footer.description}</p>
           </div>
 
@@ -98,7 +107,7 @@ export function Footer() {
 
         <div className="mt-8 border-t border-border pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} {common.siteName}. {footer.copyright}
+            &copy; {new Date().getFullYear()} {brand}. {footer.copyright}
           </p>
         </div>
       </div>

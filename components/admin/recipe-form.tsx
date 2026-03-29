@@ -49,32 +49,18 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
 
   // Form state
   const [titleEn, setTitleEn] = useState(recipe?.title_en || '');
-  const [titleFr, setTitleFr] = useState(recipe?.title_fr || '');
   const [slugEn, setSlugEn] = useState(recipe?.slug_en || '');
-  const [slugFr, setSlugFr] = useState(recipe?.slug_fr || '');
   const [descriptionEn, setDescriptionEn] = useState(recipe?.description_en || '');
-  const [descriptionFr, setDescriptionFr] = useState(recipe?.description_fr || '');
   const [ingredientsEn, setIngredientsEn] = useState<string[]>(
     recipe?.ingredients_en || ['']
-  );
-  const [ingredientsFr, setIngredientsFr] = useState<string[]>(
-    recipe?.ingredients_fr || ['']
   );
   const [instructionsEn, setInstructionsEn] = useState<string[]>(
     recipe?.instructions_en || ['']
   );
-  const [instructionsFr, setInstructionsFr] = useState<string[]>(
-    recipe?.instructions_fr || ['']
-  );
   const [blogEn, setBlogEn] = useState(recipe?.blog_en || '');
-  const [blogFr, setBlogFr] = useState(recipe?.blog_fr || '');
   const [notesEn, setNotesEn] = useState(recipe?.notes_en || '');
-  const [notesFr, setNotesFr] = useState(recipe?.notes_fr || '');
   const [nutritionEn, setNutritionEn] = useState<string[]>(
     coalesceStringArrayField(recipe?.nutrition_en)
-  );
-  const [nutritionFr, setNutritionFr] = useState<string[]>(
-    coalesceStringArrayField(recipe?.nutrition_fr)
   );
   const [prepTime, setPrepTime] = useState(
     recipe?.prep_time_minutes?.toString() || ''
@@ -99,10 +85,6 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
 
   const generateSlugEn = () => {
     setSlugEn(slugify(titleEn));
-  };
-
-  const generateSlugFr = () => {
-    setSlugFr(slugify(titleFr));
   };
 
   const handleArrayChange = (
@@ -138,21 +120,13 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
 
     const recipeData = {
       title_en: titleEn,
-      title_fr: titleFr,
       slug_en: slugEn.trim(),
-      slug_fr: slugFr.trim() || null,
       description_en: descriptionEn,
-      description_fr: descriptionFr,
       ingredients_en: ingredientsEn.filter((i) => i.trim()),
-      ingredients_fr: ingredientsFr.filter((i) => i.trim()),
       instructions_en: instructionsEn.filter((i) => i.trim()),
-      instructions_fr: instructionsFr.filter((i) => i.trim()),
       blog_en: normalizeBlogHtml(blogEn),
-      blog_fr: normalizeBlogHtml(blogFr),
       notes_en: notesEn.trim() || null,
-      notes_fr: notesFr.trim() || null,
       nutrition_en: nutritionEn.filter((i) => i.trim()),
-      nutrition_fr: nutritionFr.filter((i) => i.trim()),
       prep_time_minutes: prepTime ? parseInt(prepTime, 10) : null,
       cook_time_minutes: cookTime ? parseInt(cookTime, 10) : null,
       servings: servings ? parseInt(servings) : null,
@@ -195,31 +169,19 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
           <CardTitle className="font-serif">Basic information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="titleEn">Title (English)</Label>
-              <Input
-                id="titleEn"
-                value={titleEn}
-                onChange={(e) => setTitleEn(e.target.value)}
-                onBlur={generateSlugEn}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="titleFr">Titre (Français)</Label>
-              <Input
-                id="titleFr"
-                value={titleFr}
-                onChange={(e) => setTitleFr(e.target.value)}
-                onBlur={generateSlugFr}
-                required
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="titleEn">Title</Label>
+            <Input
+              id="titleEn"
+              value={titleEn}
+              onChange={(e) => setTitleEn(e.target.value)}
+              onBlur={generateSlugEn}
+              required
+            />
           </div>
 
           <div className="space-y-2">
-              <Label htmlFor="slugEn">Slug (English URL)</Label>
+            <Label htmlFor="slugEn">Slug</Label>
             <Input
               id="slugEn"
               value={slugEn}
@@ -229,35 +191,13 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slugFr">Slug (French URL)</Label>
-            <Input
-              id="slugFr"
-              value={slugFr}
-              onChange={(e) => setSlugFr(e.target.value)}
-              onBlur={generateSlugFr}
-              placeholder="Optional alternate slug (not used on the public English site)"
+            <Label htmlFor="descriptionEn">Description</Label>
+            <Textarea
+              id="descriptionEn"
+              value={descriptionEn}
+              onChange={(e) => setDescriptionEn(e.target.value)}
+              rows={3}
             />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="descriptionEn">Description (English)</Label>
-              <Textarea
-                id="descriptionEn"
-                value={descriptionEn}
-                onChange={(e) => setDescriptionEn(e.target.value)}
-                rows={3}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="descriptionFr">Description (Français)</Label>
-              <Textarea
-                id="descriptionFr"
-                value={descriptionFr}
-                onChange={(e) => setDescriptionFr(e.target.value)}
-                rows={3}
-              />
-            </div>
           </div>
 
           <div className="space-y-2">
@@ -290,23 +230,12 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="blogEn">English</Label>
             <RecipeRichTextEditor
               key={`blog-en-${recipe?.id ?? 'new'}`}
               id="blogEn"
               value={blogEn}
               onChange={setBlogEn}
               placeholder="Intro, tips, story… Use the toolbar for image URL or YouTube link."
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="blogFr">Français</Label>
-            <RecipeRichTextEditor
-              key={`blog-fr-${recipe?.id ?? 'new'}`}
-              id="blogFr"
-              value={blogFr}
-              onChange={setBlogFr}
-              placeholder="Intro, astuces… Images (URL) et YouTube comme en anglais."
             />
           </div>
         </CardContent>
@@ -385,83 +314,42 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
           <CardTitle className="font-serif">Ingredients</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>English</Label>
-              {ingredientsEn.map((ing, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    value={ing}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        index,
-                        e.target.value,
-                        ingredientsEn,
-                        setIngredientsEn
-                      )
-                    }
-                    placeholder={`Ingredient ${index + 1}`}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      removeArrayItem(index, ingredientsEn, setIngredientsEn)
-                    }
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => addArrayItem(ingredientsEn, setIngredientsEn)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Ingredient
-              </Button>
-            </div>
-            <div className="space-y-2">
-              <Label>Français</Label>
-              {ingredientsFr.map((ing, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    value={ing}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        index,
-                        e.target.value,
-                        ingredientsFr,
-                        setIngredientsFr
-                      )
-                    }
-                    placeholder={`Ingrédient ${index + 1}`}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      removeArrayItem(index, ingredientsFr, setIngredientsFr)
-                    }
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => addArrayItem(ingredientsFr, setIngredientsFr)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Ajouter
-              </Button>
-            </div>
+          <div className="space-y-2">
+            {ingredientsEn.map((ing, index) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  value={ing}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      index,
+                      e.target.value,
+                      ingredientsEn,
+                      setIngredientsEn
+                    )
+                  }
+                  placeholder={`Ingredient ${index + 1}`}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() =>
+                    removeArrayItem(index, ingredientsEn, setIngredientsEn)
+                  }
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => addArrayItem(ingredientsEn, setIngredientsEn)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Ingredient
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -472,85 +360,43 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
           <CardTitle className="font-serif">Instructions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>English</Label>
-              {instructionsEn.map((inst, index) => (
-                <div key={index} className="flex gap-2">
-                  <Textarea
-                    value={inst}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        index,
-                        e.target.value,
-                        instructionsEn,
-                        setInstructionsEn
-                      )
-                    }
-                    placeholder={`Step ${index + 1}`}
-                    rows={2}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      removeArrayItem(index, instructionsEn, setInstructionsEn)
-                    }
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => addArrayItem(instructionsEn, setInstructionsEn)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add Step
-              </Button>
-            </div>
-            <div className="space-y-2">
-              <Label>Français</Label>
-              {instructionsFr.map((inst, index) => (
-                <div key={index} className="flex gap-2">
-                  <Textarea
-                    value={inst}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        index,
-                        e.target.value,
-                        instructionsFr,
-                        setInstructionsFr
-                      )
-                    }
-                    placeholder={`Étape ${index + 1}`}
-                    rows={2}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      removeArrayItem(index, instructionsFr, setInstructionsFr)
-                    }
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => addArrayItem(instructionsFr, setInstructionsFr)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Ajouter
-              </Button>
-            </div>
+          <div className="space-y-2">
+            {instructionsEn.map((inst, index) => (
+              <div key={index} className="flex gap-2">
+                <Textarea
+                  value={inst}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      index,
+                      e.target.value,
+                      instructionsEn,
+                      setInstructionsEn
+                    )
+                  }
+                  placeholder={`Step ${index + 1}`}
+                  rows={2}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() =>
+                    removeArrayItem(index, instructionsEn, setInstructionsEn)
+                  }
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => addArrayItem(instructionsEn, setInstructionsEn)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Step
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -561,110 +407,56 @@ export function RecipeForm({ categories, recipe }: RecipeFormProps) {
           <CardTitle className="font-serif">Notes & nutrition</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="notesEn">Notes (English)</Label>
-              <Textarea
-                id="notesEn"
-                value={notesEn}
-                onChange={(e) => setNotesEn(e.target.value)}
-                rows={4}
-                placeholder="Substitutions, make-ahead tips, etc."
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="notesFr">Notes (Français)</Label>
-              <Textarea
-                id="notesFr"
-                value={notesFr}
-                onChange={(e) => setNotesFr(e.target.value)}
-                rows={4}
-                placeholder="Substitutions, astuces…"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="notesEn">Notes</Label>
+            <Textarea
+              id="notesEn"
+              value={notesEn}
+              onChange={(e) => setNotesEn(e.target.value)}
+              rows={4}
+              placeholder="Substitutions, make-ahead tips, etc."
+            />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>Nutrition facts (English)</Label>
-              <p className="text-xs text-muted-foreground">
-                One line per fact, e.g. Calories: 798 kcal (40%)
-              </p>
-              {nutritionEn.map((line, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    value={line}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        index,
-                        e.target.value,
-                        nutritionEn,
-                        setNutritionEn
-                      )
-                    }
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      removeArrayItem(index, nutritionEn, setNutritionEn)
-                    }
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => addArrayItem(nutritionEn, setNutritionEn)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add line
-              </Button>
-            </div>
-            <div className="space-y-2">
-              <Label>Nutrition (Français)</Label>
-              <p className="text-xs text-muted-foreground">
-                Une ligne par donnée, ex. Calories : 798 kcal (40 %)
-              </p>
-              {nutritionFr.map((line, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    value={line}
-                    onChange={(e) =>
-                      handleArrayChange(
-                        index,
-                        e.target.value,
-                        nutritionFr,
-                        setNutritionFr
-                      )
-                    }
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={() =>
-                      removeArrayItem(index, nutritionFr, setNutritionFr)
-                    }
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => addArrayItem(nutritionFr, setNutritionFr)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Ajouter
-              </Button>
-            </div>
+          <div className="space-y-2">
+            <Label>Nutrition facts</Label>
+            <p className="text-xs text-muted-foreground">
+              One line per fact, e.g. Calories: 798 kcal (40%)
+            </p>
+            {nutritionEn.map((line, index) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  value={line}
+                  onChange={(e) =>
+                    handleArrayChange(
+                      index,
+                      e.target.value,
+                      nutritionEn,
+                      setNutritionEn
+                    )
+                  }
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() =>
+                    removeArrayItem(index, nutritionEn, setNutritionEn)
+                  }
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => addArrayItem(nutritionEn, setNutritionEn)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add line
+            </Button>
           </div>
         </CardContent>
       </Card>

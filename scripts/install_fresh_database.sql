@@ -14,47 +14,38 @@
 --   2. Optional demo content: run scripts/seed.sql (only on empty/fresh data — see seed header).
 --
 -- Upgrading an OLD database that predates site_settings/static_pages:
---   Prefer scripts/legacy_schema_patches.sql after rls.sql instead of a full reinstall,
---   then run scripts/storage.sql if you use CMS image uploads.
+--   Prefer scripts/legacy_schema_patches.sql after rls_and_storage.sql instead of a full reinstall,
+--   then ensure Storage policies exist (same file includes the cms-uploads bucket).
+-- Legacy *_fr columns: run scripts/drop_legacy_french_columns.sql once, then deploy.
+-- Existing DBs missing site_settings.site_name: scripts/add_site_name_to_site_settings.sql
 --
--- Modular copies (same logic, split for maintenance): schema.sql → rls.sql → storage.sql
+-- Modular setup (same as this file, split): schema.sql → rls_and_storage.sql → seed.sql (optional)
 -- =============================================================================
 
--- ---------- schema.sql (tables, indexes, seed row for site_settings) ----------
+-- ---------- schema.sql (canonical copy: scripts/schema.sql; keep in sync) ----------
 
--- Categories
+-- Categories (English only)
 CREATE TABLE categories (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug_en TEXT NOT NULL,
-  slug_fr TEXT,
   name_en TEXT NOT NULL,
-  name_fr TEXT NOT NULL,
   description_en TEXT,
-  description_fr TEXT,
   image_url TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Recipes
+-- Recipes (English only)
 CREATE TABLE recipes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug_en TEXT NOT NULL,
-  slug_fr TEXT,
   title_en TEXT NOT NULL,
-  title_fr TEXT NOT NULL,
   description_en TEXT,
-  description_fr TEXT,
   blog_en TEXT,
-  blog_fr TEXT,
   ingredients_en JSONB NOT NULL DEFAULT '[]',
-  ingredients_fr JSONB NOT NULL DEFAULT '[]',
   instructions_en JSONB NOT NULL DEFAULT '[]',
-  instructions_fr JSONB NOT NULL DEFAULT '[]',
   notes_en TEXT,
-  notes_fr TEXT,
   nutrition_en JSONB NOT NULL DEFAULT '[]',
-  nutrition_fr JSONB NOT NULL DEFAULT '[]',
   prep_time_minutes INTEGER,
   cook_time_minutes INTEGER,
   servings INTEGER,
@@ -68,16 +59,13 @@ CREATE TABLE recipes (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Blog posts
+-- Blog posts (English only)
 CREATE TABLE blog_posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug TEXT UNIQUE NOT NULL,
   title_en TEXT NOT NULL,
-  title_fr TEXT NOT NULL,
   excerpt_en TEXT,
-  excerpt_fr TEXT,
   content_en TEXT,
-  content_fr TEXT,
   image_url TEXT,
   is_published BOOLEAN DEFAULT FALSE,
   published_at TIMESTAMPTZ,
@@ -99,28 +87,27 @@ CREATE INDEX idx_recipes_category ON recipes(category_id);
 CREATE INDEX idx_recipes_featured ON recipes(is_featured) WHERE is_featured = TRUE;
 CREATE INDEX idx_recipes_published ON recipes(is_published) WHERE is_published = TRUE;
 ALTER TABLE categories ADD CONSTRAINT categories_slug_en_key UNIQUE (slug_en);
-CREATE UNIQUE INDEX categories_slug_fr_unique ON categories (slug_fr)
-  WHERE slug_fr IS NOT NULL AND length(trim(slug_fr)) > 0;
 ALTER TABLE recipes ADD CONSTRAINT recipes_slug_en_key UNIQUE (slug_en);
-CREATE UNIQUE INDEX recipes_slug_fr_unique ON recipes (slug_fr)
-  WHERE slug_fr IS NOT NULL AND length(trim(slug_fr)) > 0;
 CREATE INDEX idx_recipes_slug_en ON recipes(slug_en);
-CREATE INDEX idx_recipes_slug_fr ON recipes(slug_fr) WHERE slug_fr IS NOT NULL;
 CREATE INDEX idx_categories_slug_en ON categories(slug_en);
-CREATE INDEX idx_categories_slug_fr ON categories(slug_fr) WHERE slug_fr IS NOT NULL;
 CREATE INDEX idx_blog_posts_slug ON blog_posts(slug);
 
 -- Site-wide settings (singleton row id = 1). Public read; admins manage via RLS.
 CREATE TABLE site_settings (
   id SMALLINT PRIMARY KEY CHECK (id = 1),
+  site_name TEXT NOT NULL DEFAULT 'Sarap Kitchen',
+  site_tagline TEXT NOT NULL DEFAULT 'Delicious Filipino Recipes',
+  color_scheme TEXT NOT NULL DEFAULT 'tomato_sage',
+  font_pair TEXT NOT NULL DEFAULT 'baskerville_raleway',
+  favicon_url TEXT,
   ads_enabled BOOLEAN NOT NULL DEFAULT FALSE,
   adsense_publisher_id TEXT,
   adsense_placements JSONB NOT NULL DEFAULT '{}'::jsonb,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-INSERT INTO site_settings (id, ads_enabled, adsense_publisher_id, adsense_placements)
-VALUES (1, FALSE, NULL, '{}'::jsonb)
+INSERT INTO site_settings (id, site_name, site_tagline, color_scheme, font_pair, ads_enabled, adsense_publisher_id, adsense_placements)
+VALUES (1, 'Sarap Kitchen', 'Delicious Filipino Recipes', 'tomato_sage', 'baskerville_raleway', FALSE, NULL, '{}'::jsonb)
 ON CONFLICT (id) DO NOTHING;
 
 -- Editable static pages (home, about, legal, etc.). Public read; admins manage via RLS.
@@ -132,7 +119,12 @@ CREATE TABLE static_pages (
   PRIMARY KEY (page_slug, locale)
 );
 
--- ------------------------------- rls.sql ------------------------------------
+-- ---------------------------- rls_and_storage.sql ---------------------------
+-- Canonical copy: scripts/rls_and_storage.sql (keep in sync when editing modular files)
+
+-- ---------------------------------------------------------------------------
+-- RLS + auth_is_admin
+-- ---------------------------------------------------------------------------
 
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;
@@ -211,8 +203,9 @@ CREATE POLICY "Admins can manage static pages" ON static_pages FOR ALL
   USING (public.auth_is_admin())
   WITH CHECK (public.auth_is_admin());
 
--- ------------------------------ storage.sql ---------------------------------
--- Storage (CMS image uploads). Needs auth_is_admin() from rls.sql above.
+-- ---------------------------------------------------------------------------
+-- Storage: public CMS uploads bucket (requires auth_is_admin above)
+-- ---------------------------------------------------------------------------
 
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('cms-uploads', 'cms-uploads', true)

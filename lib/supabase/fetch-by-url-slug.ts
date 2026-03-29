@@ -29,16 +29,7 @@ export async function fetchPublishedRecipeByUrlSlug(
   const q = () =>
     client.from('recipes').select(recipeSelectPublished).eq('is_published', true);
 
-  let res = await q().eq('slug_en', slug).maybeSingle();
-  if (res.error) return { data: null, error: res.error };
-  if (res.data) {
-    return {
-      data: res.data as Recipe & { category: Category | null },
-      error: null,
-    };
-  }
-
-  res = await q().eq('slug_fr', slug).maybeSingle();
+  const res = await q().eq('slug_en', slug).maybeSingle();
   if (res.error) return { data: null, error: res.error };
   return {
     data: (res.data ?? null) as (Recipe & { category: Category | null }) | null,
@@ -55,11 +46,11 @@ export async function fetchCategoryByUrlSlug(
     return { data: null, error: null };
   }
 
-  let res = await client.from('categories').select('*').eq('slug_en', slug).maybeSingle();
-  if (res.error) return { data: null, error: res.error };
-  if (res.data) return { data: res.data as Category, error: null };
-
-  res = await client.from('categories').select('*').eq('slug_fr', slug).maybeSingle();
+  const res = await client
+    .from('categories')
+    .select('*')
+    .eq('slug_en', slug)
+    .maybeSingle();
   if (res.error) return { data: null, error: res.error };
   return { data: (res.data ?? null) as Category | null, error: null };
 }

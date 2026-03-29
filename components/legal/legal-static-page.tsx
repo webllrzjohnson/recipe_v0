@@ -3,6 +3,7 @@ import { Footer } from '@/components/layout/footer';
 import { LegalDocument } from '@/components/legal/legal-document';
 import type { LegalPageSlug } from '@/lib/legal';
 import { copy } from '@/lib/copy';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 import { resolveLegalPageForPublic } from '@/lib/static-pages/resolve';
 import { createAnonServerClient } from '@/lib/supabase/anon-server';
 
@@ -10,15 +11,14 @@ const legal = copy.legal;
 
 export async function LegalStaticPage({ slug }: { slug: LegalPageSlug }) {
   const supabase = createAnonServerClient();
-  const { content, lastUpdated } = await resolveLegalPageForPublic(
-    supabase,
-    slug,
-    legal.lastUpdatedDate
-  );
+  const [{ content, lastUpdated }, { siteName, siteTagline }] = await Promise.all([
+    resolveLegalPageForPublic(supabase, slug, legal.lastUpdatedDate),
+    getSiteBrand(),
+  ]);
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1 py-12 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -37,7 +37,7 @@ export async function LegalStaticPage({ slug }: { slug: LegalPageSlug }) {
           </p>
         </div>
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

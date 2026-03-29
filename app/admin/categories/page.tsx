@@ -54,7 +54,6 @@ export default async function AdminCategoriesPage() {
                     <p className="font-medium text-foreground">{category.name_en}</p>
                     <p className="text-sm text-muted-foreground">
                       {category.slug_en}
-                      {category.slug_fr ? ` · ${category.slug_fr}` : ''}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

@@ -35,14 +35,9 @@ export function CategoryFormDialog({
   const [loading, setLoading] = useState(false);
 
   const [nameEn, setNameEn] = useState(category?.name_en || '');
-  const [nameFr, setNameFr] = useState(category?.name_fr || '');
   const [slugEn, setSlugEn] = useState(category?.slug_en || '');
-  const [slugFr, setSlugFr] = useState(category?.slug_fr || '');
   const [descriptionEn, setDescriptionEn] = useState(
     category?.description_en || ''
-  );
-  const [descriptionFr, setDescriptionFr] = useState(
-    category?.description_fr || ''
   );
   const [imageUrl, setImageUrl] = useState(category?.image_url || '');
 
@@ -58,10 +53,6 @@ export function CategoryFormDialog({
     setSlugEn(slugify(nameEn));
   };
 
-  const generateSlugFr = () => {
-    setSlugFr(slugify(nameFr));
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -70,11 +61,8 @@ export function CategoryFormDialog({
 
     const categoryData = {
       name_en: nameEn,
-      name_fr: nameFr,
       slug_en: slugEn,
-      slug_fr: slugFr.trim() || null,
       description_en: descriptionEn || null,
-      description_fr: descriptionFr || null,
       image_url: imageUrl || null,
       updated_at: new Date().toISOString(),
     };
@@ -123,31 +111,19 @@ export function CategoryFormDialog({
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="nameEn">Name (English)</Label>
-              <Input
-                id="nameEn"
-                value={nameEn}
-                onChange={(e) => setNameEn(e.target.value)}
-                onBlur={generateSlugEn}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="nameFr">Nom (Français)</Label>
-              <Input
-                id="nameFr"
-                value={nameFr}
-                onChange={(e) => setNameFr(e.target.value)}
-                onBlur={generateSlugFr}
-                required
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="nameEn">Name</Label>
+            <Input
+              id="nameEn"
+              value={nameEn}
+              onChange={(e) => setNameEn(e.target.value)}
+              onBlur={generateSlugEn}
+              required
+            />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slugEn">Slug (English URL)</Label>
+            <Label htmlFor="slugEn">Slug</Label>
             <Input
               id="slugEn"
               value={slugEn}
@@ -157,35 +133,13 @@ export function CategoryFormDialog({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slugFr">Slug (French URL)</Label>
-            <Input
-              id="slugFr"
-              value={slugFr}
-              onChange={(e) => setSlugFr(e.target.value)}
-              onBlur={generateSlugFr}
-              placeholder="optional"
+            <Label htmlFor="descriptionEn">Description</Label>
+            <Textarea
+              id="descriptionEn"
+              value={descriptionEn}
+              onChange={(e) => setDescriptionEn(e.target.value)}
+              rows={2}
             />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="descriptionEn">Description (English)</Label>
-              <Textarea
-                id="descriptionEn"
-                value={descriptionEn}
-                onChange={(e) => setDescriptionEn(e.target.value)}
-                rows={2}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="descriptionFr">Description (Français)</Label>
-              <Textarea
-                id="descriptionFr"
-                value={descriptionFr}
-                onChange={(e) => setDescriptionFr(e.target.value)}
-                rows={2}
-              />
-            </div>
           </div>
 
           <div className="space-y-2">

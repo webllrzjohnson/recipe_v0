@@ -38,6 +38,9 @@
   --sidebar-accent-foreground: #141414;
   --sidebar-border: #e0ddd4;
   --sidebar-ring: oklch(0.5 0.17 28);
+  /* Overridden at runtime from /admin/settings (see getSiteAppearance) */
+  --site-font-serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --site-font-sans: 'Raleway', ui-sans-serif, system-ui, sans-serif;
 }
 
 .dark {
@@ -73,11 +76,13 @@
   --sidebar-accent-foreground: oklch(0.96 0.01 90);
   --sidebar-border: oklch(0.3 0.02 50);
   --sidebar-ring: oklch(0.62 0.17 28);
+  --site-font-serif: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+  --site-font-sans: 'Raleway', ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme inline {
-  --font-sans: var(--font-raleway), Raleway, Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
-  --font-serif: 'Libre Baskerville', 'Libre Baskerville Fallback', Georgia, 'Times New Roman', serif;
+  --font-sans: var(--site-font-sans);
+  --font-serif: var(--site-font-serif);
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);

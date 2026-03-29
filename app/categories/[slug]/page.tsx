@@ -14,6 +14,7 @@ import { localizeCategory, localizeRecipe } from '@/lib/utils/localize';
 import { ArrowLeft } from 'lucide-react';
 import type { Category, Recipe } from '@/lib/types/database';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 
 const common = copy.common;
 const seo = copy.seo;
@@ -27,10 +28,10 @@ export async function generateMetadata({
   const slug = normalizeUrlSlug(rawSlug);
   const supabase = createAnonServerClient();
 
-  const { data: category, error: metaErr } = await fetchCategoryByUrlSlug(
-    supabase,
-    slug
-  );
+  const [{ data: category, error: metaErr }, { siteName }] = await Promise.all([
+    fetchCategoryByUrlSlug(supabase, slug),
+    getSiteBrand(),
+  ]);
 
   if (metaErr && process.env.NODE_ENV === 'development') {
     console.error('[category metadata]', metaErr.message);
@@ -58,7 +59,7 @@ export async function generateMetadata({
     title: name,
     description,
     ogImages,
-    siteName: common.siteName,
+    siteName,
   });
 }
 
@@ -72,10 +73,8 @@ export default async function CategoryDetailPage({
 
   const supabase = createAnonServerClient();
 
-  const { data: categoryData, error: catErr } = await fetchCategoryByUrlSlug(
-    supabase,
-    slug
-  );
+  const [{ data: categoryData, error: catErr }, { siteName, siteTagline }] =
+    await Promise.all([fetchCategoryByUrlSlug(supabase, slug), getSiteBrand()]);
 
   if (catErr && process.env.NODE_ENV === 'development') {
     console.error('[category detail]', catErr.message);
@@ -106,7 +105,7 @@ export default async function CategoryDetailPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1">
         <section className="py-12 sm:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -146,7 +145,7 @@ export default async function CategoryDetailPage({
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

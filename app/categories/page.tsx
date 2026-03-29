@@ -6,27 +6,29 @@ import { CategoryCard } from '@/components/categories/category-card';
 import { localizeCategory } from '@/lib/utils/localize';
 import type { Category } from '@/lib/types/database';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 
 const common = copy.common;
 const categoryNs = copy.category;
 const seo = copy.seo;
 
 export async function generateMetadata() {
+  const { siteName } = await getSiteBrand();
   return buildPageMetadata({
     pathname: '/categories',
     title: categoryNs.allCategories,
     description: seo.categoriesListingDescription,
-    siteName: common.siteName,
+    siteName,
   });
 }
 
 export default async function CategoriesPage() {
   const supabase = createAnonServerClient();
 
-  const { data: categoriesData } = await supabase
-    .from('categories')
-    .select('*')
-    .order('name_en', { ascending: true });
+  const [{ data: categoriesData }, { siteName, siteTagline }] = await Promise.all([
+    supabase.from('categories').select('*').order('name_en', { ascending: true }),
+    getSiteBrand(),
+  ]);
 
   const categories = await Promise.all(
     (categoriesData as Category[] | null)?.map(async (category) => {
@@ -45,7 +47,7 @@ export default async function CategoriesPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1">
         <section className="py-12 sm:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -69,7 +71,7 @@ export default async function CategoriesPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

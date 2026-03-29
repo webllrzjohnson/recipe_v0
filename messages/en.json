@@ -150,7 +150,7 @@
       "success": "Image uploaded.",
       "invalidType": "Use JPEG, PNG, WebP, or GIF.",
       "tooLarge": "Image must be 8 MB or smaller.",
-      "failed": "Could not upload image. Ensure the cms-uploads bucket exists (see scripts/storage.sql)."
+      "failed": "Could not upload image. Ensure the cms-uploads bucket exists (see scripts/rls_and_storage.sql)."
     },
     "goHome": "View site",
     "categoriesSubtitle": "Manage your recipe categories",
@@ -164,6 +164,40 @@
     "newCategoryTitle": "New category",
     "editCategoryTitle": "Edit category",
     "sitePages": "Site pages",
+    "siteBranding": {
+      "pageTitle": "Site settings",
+      "pageDescription": "Branding, colors, fonts, and favicon for the public site.",
+      "title": "Website name",
+      "description": "Shown in the header next to the logo, footer, and browser titles (“Page | [name]”).",
+      "label": "Site name",
+      "taglineLabel": "Tagline",
+      "taglineHint": "Short line under the site name in the header and footer (e.g. what you cook).",
+      "colorLabel": "Color scheme",
+      "fontLabel": "Fonts",
+      "faviconLabel": "Favicon URL",
+      "faviconHint": "Square PNG, ICO, or SVG. Upload stores a public URL; browsers may cache—hard refresh after changes.",
+      "clearFavicon": "Use default icons",
+      "required": "Enter a site name.",
+      "saved": "Site settings saved.",
+      "saveError": "Could not save. Run scripts/add_site_appearance_columns.sql on Supabase if columns are missing.",
+      "saving": "Saving…",
+      "loadErrorTitle": "Could not load settings",
+      "loadErrorBody": "Check your connection and Supabase site_settings table.",
+      "colors": {
+        "tomato_sage": "Tomato & sage (classic)",
+        "ocean_blue": "Ocean blue",
+        "warm_spice": "Warm spice",
+        "forest_moss": "Forest moss",
+        "midnight_plum": "Midnight plum"
+      },
+      "fonts": {
+        "baskerville_raleway": "Libre Baskerville + Raleway",
+        "lora_open_sans": "Lora + Open Sans",
+        "playfair_lato": "Playfair Display + Lato",
+        "merriweather_source_sans": "Merriweather + Source Sans 3",
+        "fraunces_work_sans": "Fraunces + Work Sans"
+      }
+    },
     "ads": {
       "nav": "AdSense",
       "title": "Google AdSense",
@@ -186,7 +220,7 @@
       "saveError": "Could not save settings.",
       "invalidPublisher": "Publisher ID must look like ca-pub- followed by digits.",
       "invalidSlot": "Each enabled placement needs a numeric slot ID from AdSense (often 10–13 digits).",
-      "applySqlReminder": "If ads settings are missing in the database, run scripts/legacy_schema_patches.sql on Supabase after rls.sql, or apply schema.sql then rls.sql for a fresh database. Then reload this page.",
+      "applySqlReminder": "If ads settings are missing in the database, run scripts/legacy_schema_patches.sql on Supabase after rls_and_storage.sql, or apply schema.sql then rls_and_storage.sql for a fresh database. Then reload this page.",
       "loadErrorTitle": "Could not load AdSense settings from the database."
     },
     "pages": {
@@ -196,7 +230,7 @@
       "preview": "Preview",
       "saved": "Page saved.",
       "saveError": "Could not save the page.",
-      "sqlReminder": "If saving fails, run scripts/legacy_schema_patches.sql on Supabase after rls.sql, or apply schema.sql then rls.sql.",
+      "sqlReminder": "If saving fails, run scripts/legacy_schema_patches.sql on Supabase after rls_and_storage.sql, or apply schema.sql then rls_and_storage.sql.",
       "validationRequired": "Fill in all required fields.",
       "validationSection": "Each section needs a heading and at least one paragraph.",
       "validationValue": "Each value card needs a title and description.",

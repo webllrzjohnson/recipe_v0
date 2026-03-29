@@ -1,7 +1,8 @@
 -- Legacy migration only: databases that still use a single `slug` column on
 -- recipes/categories (older schema). Do NOT run on a database created from schema.sql.
 --
--- After running: your rows use slug_en / slug_fr; application code expects those columns.
+-- After running: your rows use slug_en / slug_fr (legacy). Current app + schema are English-only;
+-- run drop_legacy_french_columns.sql after upgrading, or use a fresh install_fresh_database.sql.
 
 DROP INDEX IF EXISTS idx_recipes_slug;
 DROP INDEX IF EXISTS idx_categories_slug;

@@ -15,6 +15,7 @@ import { RecipeBlog } from '@/components/recipes/recipe-blog';
 import { ArrowLeft } from 'lucide-react';
 import type { Recipe, Category } from '@/lib/types/database';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 import { RecipeJsonLd } from '@/components/seo/recipe-json-ld';
 import {
   fetchPublishedRecipeByUrlSlug,
@@ -41,10 +42,11 @@ export async function generateMetadata({
   const slug = normalizeUrlSlug(rawSlug);
   const supabase = createAnonServerClient();
 
-  const { data: recipe, error } = await fetchPublishedRecipeByUrlSlug(
-    supabase,
-    slug
-  );
+  const [recipeRes, { siteName }] = await Promise.all([
+    fetchPublishedRecipeByUrlSlug(supabase, slug),
+    getSiteBrand(),
+  ]);
+  const { data: recipe, error } = recipeRes;
 
   if (error && process.env.NODE_ENV === 'development') {
     console.error('[recipe metadata]', error.message);
@@ -67,7 +69,7 @@ export async function generateMetadata({
     description,
     ogImages: [ogImage],
     ogType: 'article',
-    siteName: common.siteName,
+    siteName,
   });
 }
 
@@ -81,8 +83,8 @@ export default async function RecipeDetailPage({
 
   const supabase = createAnonServerClient();
 
-  const { data: recipeData, error: recipeError } =
-    await fetchPublishedRecipeByUrlSlug(supabase, slug);
+  const [{ data: recipeData, error: recipeError }, { siteName, siteTagline }] =
+    await Promise.all([fetchPublishedRecipeByUrlSlug(supabase, slug), getSiteBrand()]);
 
   if (recipeError && process.env.NODE_ENV === 'development') {
     console.error('[recipe detail]', recipeError.message);
@@ -133,7 +135,7 @@ export default async function RecipeDetailPage({
   return (
     <div className="flex min-h-screen flex-col">
       <RecipeJsonLd recipe={recipe} url={absUrl} />
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <AdSensePageBootstrap
         configAllowsAds={adSettings.adsActive}
         publisherId={adSettings.publisherId}
@@ -363,7 +365,7 @@ export default async function RecipeDetailPage({
           <AdSensePlacement settings={adSettings} placementKey="above_footer" />
         </div>
       </div>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

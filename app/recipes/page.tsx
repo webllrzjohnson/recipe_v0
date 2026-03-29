@@ -6,6 +6,7 @@ import { RecipesInfiniteList } from '@/components/recipes/recipes-infinite-list'
 import { localizeRecipe } from '@/lib/utils/localize';
 import type { Recipe, Category } from '@/lib/types/database';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 import {
   fetchPublishedRecipesPage,
   RECIPES_PAGE_SIZE,
@@ -25,12 +26,13 @@ export async function generateMetadata({
   const { q: rawQ } = await searchParams;
   const q = rawQ?.trim() ?? '';
   const title = q ? `${common.recipes} · ${q}` : common.recipes;
+  const { siteName } = await getSiteBrand();
 
   return buildPageMetadata({
     pathname: '/recipes',
     title,
     description: seo.recipesListingDescription,
-    siteName: common.siteName,
+    siteName,
   });
 }
 
@@ -44,14 +46,15 @@ export default async function RecipesPage({
 
   const supabase = createAnonServerClient();
 
-  const { data, error, count, hasMore } = await fetchPublishedRecipesPage(
-    supabase,
-    {
-      page: 1,
-      pageSize: RECIPES_PAGE_SIZE,
-      q: q || null,
-    }
-  );
+  const [{ data, error, count, hasMore }, { siteName, siteTagline }] =
+    await Promise.all([
+      fetchPublishedRecipesPage(supabase, {
+        page: 1,
+        pageSize: RECIPES_PAGE_SIZE,
+        q: q || null,
+      }),
+      getSiteBrand(),
+    ]);
 
   if (error && process.env.NODE_ENV === 'development') {
     console.error('[recipes page]', error.message);
@@ -62,7 +65,7 @@ export default async function RecipesPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1">
         <section className="py-12 sm:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -102,7 +105,7 @@ export default async function RecipesPage({
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

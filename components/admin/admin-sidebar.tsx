@@ -14,6 +14,7 @@ import {
   Megaphone,
   Home,
   FileText,
+  Settings,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -33,6 +34,11 @@ export function AdminSidebar() {
       href: '/admin/pages',
       label: admin.sitePages,
       icon: FileText,
+    },
+    {
+      href: '/admin/settings',
+      label: admin.settings,
+      icon: Settings,
     },
     {
       href: '/admin/recipes',

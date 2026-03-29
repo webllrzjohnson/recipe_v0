@@ -63,7 +63,7 @@ export default async function AdminDashboardPage() {
 
   const { data: recentRecipes } = await supabase
     .from('recipes')
-    .select('id, title_en, title_fr, is_published, created_at')
+    .select('id, title_en, is_published, created_at')
     .order('created_at', { ascending: false })
     .limit(5);
 

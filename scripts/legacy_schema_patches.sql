@@ -1,10 +1,10 @@
 -- Optional one-shot patches for databases created from an older schema snapshot
 -- that is missing site_settings and/or static_pages.
 --
--- Requires: rls.sql already applied (public.auth_is_admin() must exist).
+-- Requires: rls_and_storage.sql already applied (public.auth_is_admin() must exist).
 -- Safe to re-run: uses IF NOT EXISTS / DROP POLICY IF EXISTS / ON CONFLICT DO NOTHING.
 --
--- New projects: prefer schema.sql → rls.sql instead of this file.
+-- New projects: prefer schema.sql → rls_and_storage.sql instead of this file.
 -- Slugs used in static_pages: home, about, privacy, terms, disclaimer, cookies.
 
 -- ---------------------------------------------------------------------------
@@ -19,8 +19,23 @@ CREATE TABLE IF NOT EXISTS site_settings (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-INSERT INTO site_settings (id, ads_enabled, adsense_publisher_id, adsense_placements)
-VALUES (1, FALSE, NULL, '{}'::jsonb)
+ALTER TABLE site_settings
+  ADD COLUMN IF NOT EXISTS site_name TEXT NOT NULL DEFAULT 'Sarap Kitchen';
+
+ALTER TABLE site_settings
+  ADD COLUMN IF NOT EXISTS site_tagline TEXT NOT NULL DEFAULT 'Delicious Filipino Recipes';
+
+ALTER TABLE site_settings
+  ADD COLUMN IF NOT EXISTS color_scheme TEXT NOT NULL DEFAULT 'tomato_sage';
+
+ALTER TABLE site_settings
+  ADD COLUMN IF NOT EXISTS font_pair TEXT NOT NULL DEFAULT 'baskerville_raleway';
+
+ALTER TABLE site_settings
+  ADD COLUMN IF NOT EXISTS favicon_url TEXT;
+
+INSERT INTO site_settings (id, site_name, site_tagline, color_scheme, font_pair, ads_enabled, adsense_publisher_id, adsense_placements)
+VALUES (1, 'Sarap Kitchen', 'Delicious Filipino Recipes', 'tomato_sage', 'baskerville_raleway', FALSE, NULL, '{}'::jsonb)
 ON CONFLICT (id) DO NOTHING;
 
 ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;

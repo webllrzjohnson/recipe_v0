@@ -10,7 +10,15 @@ import { cn } from '@/lib/utils';
 
 const common = copy.common;
 
-export function Header() {
+export function Header({
+  siteName,
+  siteTagline,
+}: {
+  siteName?: string;
+  siteTagline?: string | null;
+}) {
+  const brand = siteName?.trim() || common.siteName;
+  const tag = siteTagline?.trim() || null;
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -26,11 +34,16 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <ChefHat className="h-8 w-8 text-primary" />
-            <span className="font-serif text-xl font-bold tracking-tight text-foreground">
-              {common.siteName}
-            </span>
+          <Link href="/" className="flex min-w-0 max-w-[65%] items-center gap-2 sm:max-w-none">
+            <ChefHat className="h-8 w-8 shrink-0 text-primary" />
+            <div className="flex min-w-0 flex-col leading-tight">
+              <span className="font-serif text-xl font-bold tracking-tight text-foreground">
+                {brand}
+              </span>
+              {tag ? (
+                <span className="truncate text-xs font-medium text-muted-foreground">{tag}</span>
+              ) : null}
+            </div>
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">

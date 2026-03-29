@@ -1,11 +1,8 @@
 export interface Category {
   id: string;
   name_en: string;
-  name_fr: string;
   slug_en: string;
-  slug_fr: string | null;
   description_en: string | null;
-  description_fr: string | null;
   image_url: string | null;
   created_at: string;
   updated_at: string;
@@ -14,21 +11,13 @@ export interface Category {
 export interface Recipe {
   id: string;
   title_en: string;
-  title_fr: string;
   slug_en: string;
-  slug_fr: string | null;
   description_en: string | null;
-  description_fr: string | null;
   ingredients_en: string[];
-  ingredients_fr: string[];
   instructions_en: string[];
-  instructions_fr: string[];
   notes_en: string | null;
-  notes_fr: string | null;
   blog_en?: string | null;
-  blog_fr?: string | null;
   nutrition_en: string[];
-  nutrition_fr: string[];
   prep_time_minutes: number | null;
   cook_time_minutes: number | null;
   servings: number | null;
@@ -45,12 +34,9 @@ export interface Recipe {
 export interface BlogPost {
   id: string;
   title_en: string;
-  title_fr: string;
   slug: string;
   content_en: string | null;
-  content_fr: string | null;
   excerpt_en: string | null;
-  excerpt_fr: string | null;
   image_url: string | null;
   is_published: boolean;
   published_at: string | null;
@@ -68,6 +54,11 @@ export interface AdminProfile {
 
 export interface SiteSettings {
   id: number;
+  site_name: string;
+  site_tagline: string;
+  color_scheme: string;
+  font_pair: string;
+  favicon_url: string | null;
   ads_enabled: boolean;
   adsense_publisher_id: string | null;
   adsense_placements: Record<string, unknown>;

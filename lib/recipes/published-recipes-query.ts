@@ -17,14 +17,7 @@ export function recipeSearchOrFilter(q: string): string | null {
   const term = searchTermForIlike(q);
   if (!term) return null;
   const pattern = `%${term}%`;
-  const cols = [
-    'title_en',
-    'title_fr',
-    'description_en',
-    'description_fr',
-    'slug_en',
-    'slug_fr',
-  ] as const;
+  const cols = ['title_en', 'description_en', 'slug_en'] as const;
   return cols.map((col) => `${col}.ilike.${pattern}`).join(',');
 }
 

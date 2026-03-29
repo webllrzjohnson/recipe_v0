@@ -1,11 +1,13 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 
-export default function BlogIndexLoading() {
+export default async function BlogIndexLoading() {
+  const { siteName, siteTagline } = await getSiteBrand();
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1">
         <section className="py-12 sm:py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -24,7 +26,7 @@ export default function BlogIndexLoading() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

@@ -21,21 +21,15 @@ function jsonbStringArray(value: unknown): string[] {
 }
 
 function pickNotes(recipe: Recipe): string | null {
-  const en = recipe.notes_en?.trim() || null;
-  const fr = recipe.notes_fr?.trim() || null;
-  return en ?? fr;
+  return recipe.notes_en?.trim() || null;
 }
 
 function pickNutrition(recipe: Recipe): string[] {
-  const en = jsonbStringArray(recipe.nutrition_en);
-  const fr = jsonbStringArray(recipe.nutrition_fr);
-  return en.length > 0 ? en : fr;
+  return jsonbStringArray(recipe.nutrition_en);
 }
 
 function pickBlog(recipe: Recipe): string | null {
-  const en = recipe.blog_en?.trim() || null;
-  const fr = recipe.blog_fr?.trim() || null;
-  return en ?? fr;
+  return recipe.blog_en?.trim() || null;
 }
 
 export function localizeCategory(category: Category): LocalizedCategory {
@@ -73,15 +67,12 @@ export function localizeRecipe(recipe: Recipe): LocalizedRecipe {
 }
 
 export function localizeBlogPost(post: BlogPost): LocalizedBlogPost {
-  const title = post.title_en?.trim() || post.title_fr;
-  const content = post.content_en?.trim() ? post.content_en : post.content_fr;
-  const excerpt = post.excerpt_en?.trim() ? post.excerpt_en : post.excerpt_fr;
   return {
     id: post.id,
-    title,
+    title: post.title_en?.trim() || '',
     slug: post.slug,
-    content: content ?? null,
-    excerpt: excerpt ?? null,
+    content: post.content_en ?? null,
+    excerpt: post.excerpt_en ?? null,
     image_url: post.image_url,
     created_at: post.created_at,
   };

@@ -1,35 +1,39 @@
 import Image from 'next/image';
-import { copy } from '@/lib/copy';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { ChefHat, Heart, Users } from 'lucide-react';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 import { resolveAboutPage } from '@/lib/static-pages/resolve';
 import { createAnonServerClient } from '@/lib/supabase/anon-server';
-
-const common = copy.common;
 
 const VALUE_ICONS = [Heart, Users, ChefHat] as const;
 
 export async function generateMetadata() {
   const supabase = createAnonServerClient();
-  const about = await resolveAboutPage(supabase);
+  const [about, { siteName }] = await Promise.all([
+    resolveAboutPage(supabase),
+    getSiteBrand(),
+  ]);
 
   return buildPageMetadata({
     pathname: '/about',
     title: about.title,
     description: about.subtitle,
-    siteName: common.siteName,
+    siteName,
   });
 }
 
 export default async function AboutPage() {
   const supabase = createAnonServerClient();
-  const content = await resolveAboutPage(supabase);
+  const [content, { siteName, siteTagline }] = await Promise.all([
+    resolveAboutPage(supabase),
+    getSiteBrand(),
+  ]);
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1">
         <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/5 py-16 sm:py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -114,7 +118,7 @@ export default async function AboutPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

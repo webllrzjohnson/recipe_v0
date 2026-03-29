@@ -1,11 +1,13 @@
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 
-export default function RecipeDetailLoading() {
+export default async function RecipeDetailLoading() {
+  const { siteName, siteTagline } = await getSiteBrand();
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1">
         <article className="py-10 sm:py-14">
           <div className="mx-auto max-w-[730px] px-4 sm:px-6 lg:px-8">
@@ -20,7 +22,7 @@ export default function RecipeDetailLoading() {
           </div>
         </article>
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

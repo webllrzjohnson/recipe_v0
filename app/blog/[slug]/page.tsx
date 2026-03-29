@@ -9,10 +9,10 @@ import { Footer } from '@/components/layout/footer';
 import { BlogPostBody } from '@/components/blog/blog-post-body';
 import { localizeBlogPost } from '@/lib/utils/localize';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 import type { BlogPost } from '@/lib/types/database';
 import { ArrowLeft } from 'lucide-react';
 
-const common = copy.common;
 const blogPage = copy.blogPage;
 
 export async function generateMetadata({
@@ -24,12 +24,15 @@ export async function generateMetadata({
   const slug = normalizeUrlSlug(rawSlug);
   const supabase = createAnonServerClient();
 
-  const { data: row } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .eq('slug', slug)
-    .eq('is_published', true)
-    .maybeSingle();
+  const [{ data: row }, { siteName }] = await Promise.all([
+    supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_published', true)
+      .maybeSingle(),
+    getSiteBrand(),
+  ]);
 
   if (!row) {
     return {
@@ -49,7 +52,7 @@ export async function generateMetadata({
     description,
     ogImages: post.image_url?.trim() ? [post.image_url.trim()] : undefined,
     ogType: 'article',
-    siteName: common.siteName,
+    siteName,
   });
 }
 
@@ -63,12 +66,15 @@ export default async function BlogPostPage({
 
   const supabase = createAnonServerClient();
 
-  const { data: row, error } = await supabase
-    .from('blog_posts')
-    .select('*')
-    .eq('slug', slug)
-    .eq('is_published', true)
-    .maybeSingle();
+  const [{ data: row, error }, { siteName, siteTagline }] = await Promise.all([
+    supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_published', true)
+      .maybeSingle(),
+    getSiteBrand(),
+  ]);
 
   if (error && process.env.NODE_ENV === 'development') {
     console.error('[blog post]', error.message);
@@ -88,7 +94,7 @@ export default async function BlogPostPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1">
         <article className="py-10 sm:py-14">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
@@ -132,7 +138,7 @@ export default async function BlogPostPage({
           </div>
         </article>
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }

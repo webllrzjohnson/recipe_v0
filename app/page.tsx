@@ -1,4 +1,3 @@
-import { copy } from '@/lib/copy';
 import { createAnonServerClient } from '@/lib/supabase/anon-server';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -8,25 +7,30 @@ import { CategoryGrid } from '@/components/home/category-grid';
 import { localizeRecipe, localizeCategory } from '@/lib/utils/localize';
 import type { Recipe, Category } from '@/lib/types/database';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
+import { getSiteBrand } from '@/lib/site/get-site-appearance';
 import { resolveHomeHero } from '@/lib/static-pages/resolve';
-
-const common = copy.common;
 
 export async function generateMetadata() {
   const supabase = createAnonServerClient();
-  const hero = await resolveHomeHero(supabase);
+  const [hero, { siteName }] = await Promise.all([
+    resolveHomeHero(supabase),
+    getSiteBrand(),
+  ]);
 
   return buildPageMetadata({
     pathname: '',
     title: hero.heroTitle,
     description: hero.heroSubtitle,
-    siteName: common.siteName,
+    siteName,
   });
 }
 
 export default async function HomePage() {
   const supabase = createAnonServerClient();
-  const heroContent = await resolveHomeHero(supabase);
+  const [heroContent, { siteName, siteTagline }] = await Promise.all([
+    resolveHomeHero(supabase),
+    getSiteBrand(),
+  ]);
 
   const { data: recipesData, error: recipesError } = await supabase
     .from('recipes')
@@ -55,13 +59,13 @@ export default async function HomePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
+      <Header siteName={siteName} siteTagline={siteTagline} />
       <main className="flex-1">
         <HeroSection content={heroContent} />
         <FeaturedRecipes recipes={recipes} />
         <CategoryGrid categories={categories} />
       </main>
-      <Footer />
+      <Footer siteName={siteName} siteTagline={siteTagline} />
     </div>
   );
 }
