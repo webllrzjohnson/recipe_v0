@@ -3,103 +3,81 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Warm, home-kitchen editorial recipe website theme */
+/* Editorial kitchen theme — Panlasang-adjacent palette: tan field, charcoal ink, tomato + sage */
 :root {
-  /* Base: Warm cream background */
-  --background: oklch(0.99 0.01 90);
-  --foreground: oklch(0.15 0.02 50);
-  
-  /* Cards: Slightly warmer white */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0.02 50);
-  
-  /* Popover */
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0.02 50);
-  
-  /* Primary: Rich tomato red */
-  --primary: oklch(0.52 0.18 25);
-  --primary-foreground: oklch(0.99 0.01 90);
-  
-  /* Secondary: Warm neutral */
-  --secondary: oklch(0.95 0.01 80);
-  --secondary-foreground: oklch(0.25 0.02 50);
-  
-  /* Muted: Soft warm gray */
-  --muted: oklch(0.94 0.01 80);
-  --muted-foreground: oklch(0.45 0.02 50);
-  
-  /* Accent: Golden yellow */
-  --accent: oklch(0.82 0.14 80);
-  --accent-foreground: oklch(0.20 0.02 50);
-  
-  /* Destructive */
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  
-  /* Border and Input */
-  --border: oklch(0.88 0.02 80);
-  --input: oklch(0.92 0.01 80);
-  --ring: oklch(0.52 0.18 25);
-  
-  /* Charts */
-  --chart-1: oklch(0.52 0.18 25);
-  --chart-2: oklch(0.82 0.14 80);
-  --chart-3: oklch(0.55 0.12 145);
-  --chart-4: oklch(0.65 0.15 35);
+  --background: #faf9f5;
+  --foreground: #141414;
+  --card: #ffffff;
+  --card-foreground: #141414;
+  --popover: #ffffff;
+  --popover-foreground: #141414;
+  --primary: oklch(0.5 0.17 28);
+  --primary-foreground: #fffaf5;
+  --secondary: #f0efe8;
+  --secondary-foreground: #141414;
+  --muted: #ebe8df;
+  --muted-foreground: #5c5c5c;
+  --accent: #535e50;
+  --accent-foreground: #f8f7f2;
+  --destructive: oklch(0.52 0.2 25);
+  --destructive-foreground: #fff;
+  --border: #e0ddd4;
+  --input: #e8e5dc;
+  --ring: oklch(0.5 0.17 28);
+  --chart-1: oklch(0.5 0.17 28);
+  --chart-2: oklch(0.48 0.06 145);
+  --chart-3: oklch(0.72 0.12 85);
+  --chart-4: oklch(0.6 0.14 35);
   --chart-5: oklch(0.45 0.08 250);
-  
-  --radius: 0.625rem;
-  
-  /* Sidebar */
-  --sidebar: oklch(0.97 0.01 80);
-  --sidebar-foreground: oklch(0.15 0.02 50);
-  --sidebar-primary: oklch(0.52 0.18 25);
-  --sidebar-primary-foreground: oklch(0.99 0.01 90);
-  --sidebar-accent: oklch(0.94 0.01 80);
-  --sidebar-accent-foreground: oklch(0.25 0.02 50);
-  --sidebar-border: oklch(0.88 0.02 80);
-  --sidebar-ring: oklch(0.52 0.18 25);
+  --radius: 0.75rem;
+  --sidebar: #f5f4ee;
+  --sidebar-foreground: #141414;
+  --sidebar-primary: oklch(0.5 0.17 28);
+  --sidebar-primary-foreground: #fffaf5;
+  --sidebar-accent: #ebe8df;
+  --sidebar-accent-foreground: #141414;
+  --sidebar-border: #e0ddd4;
+  --sidebar-ring: oklch(0.5 0.17 28);
 }
 
 .dark {
-  --background: oklch(0.15 0.02 50);
-  --foreground: oklch(0.97 0.01 80);
-  --card: oklch(0.18 0.02 50);
-  --card-foreground: oklch(0.97 0.01 80);
-  --popover: oklch(0.18 0.02 50);
-  --popover-foreground: oklch(0.97 0.01 80);
-  --primary: oklch(0.62 0.18 25);
+  --background: oklch(0.16 0.02 50);
+  --foreground: oklch(0.96 0.01 90);
+  --card: oklch(0.2 0.02 50);
+  --card-foreground: oklch(0.96 0.01 90);
+  --popover: oklch(0.2 0.02 50);
+  --popover-foreground: oklch(0.96 0.01 90);
+  --primary: oklch(0.62 0.17 28);
   --primary-foreground: oklch(0.15 0.02 50);
-  --secondary: oklch(0.25 0.02 50);
-  --secondary-foreground: oklch(0.97 0.01 80);
-  --muted: oklch(0.25 0.02 50);
-  --muted-foreground: oklch(0.65 0.02 80);
-  --accent: oklch(0.72 0.12 80);
-  --accent-foreground: oklch(0.15 0.02 50);
+  --secondary: oklch(0.26 0.02 50);
+  --secondary-foreground: oklch(0.96 0.01 90);
+  --muted: oklch(0.26 0.02 50);
+  --muted-foreground: oklch(0.68 0.02 80);
+  --accent: oklch(0.55 0.06 145);
+  --accent-foreground: oklch(0.98 0.01 90);
   --destructive: oklch(0.45 0.18 25);
-  --destructive-foreground: oklch(0.97 0.01 80);
-  --border: oklch(0.28 0.02 50);
-  --input: oklch(0.28 0.02 50);
-  --ring: oklch(0.62 0.18 25);
-  --chart-1: oklch(0.62 0.18 25);
-  --chart-2: oklch(0.72 0.12 80);
-  --chart-3: oklch(0.65 0.12 145);
-  --chart-4: oklch(0.70 0.15 35);
+  --destructive-foreground: oklch(0.96 0.01 90);
+  --border: oklch(0.3 0.02 50);
+  --input: oklch(0.3 0.02 50);
+  --ring: oklch(0.62 0.17 28);
+  --chart-1: oklch(0.62 0.17 28);
+  --chart-2: oklch(0.55 0.06 145);
+  --chart-3: oklch(0.72 0.12 85);
+  --chart-4: oklch(0.7 0.14 35);
   --chart-5: oklch(0.55 0.08 250);
-  --sidebar: oklch(0.18 0.02 50);
-  --sidebar-foreground: oklch(0.97 0.01 80);
-  --sidebar-primary: oklch(0.62 0.18 25);
-  --sidebar-primary-foreground: oklch(0.97 0.01 80);
-  --sidebar-accent: oklch(0.25 0.02 50);
-  --sidebar-accent-foreground: oklch(0.97 0.01 80);
-  --sidebar-border: oklch(0.28 0.02 50);
-  --sidebar-ring: oklch(0.62 0.18 25);
+  --sidebar: oklch(0.2 0.02 50);
+  --sidebar-foreground: oklch(0.96 0.01 90);
+  --sidebar-primary: oklch(0.62 0.17 28);
+  --sidebar-primary-foreground: oklch(0.96 0.01 90);
+  --sidebar-accent: oklch(0.26 0.02 50);
+  --sidebar-accent-foreground: oklch(0.96 0.01 90);
+  --sidebar-border: oklch(0.3 0.02 50);
+  --sidebar-ring: oklch(0.62 0.17 28);
 }
 
 @theme inline {
-  --font-sans: 'Source Sans 3', 'Source Sans 3 Fallback', system-ui, sans-serif;
-  --font-serif: 'Lora', 'Lora Fallback', Georgia, serif;
+  --font-sans: var(--font-raleway), Raleway, Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+  --font-serif: 'Libre Baskerville', 'Libre Baskerville Fallback', Georgia, 'Times New Roman', serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -145,5 +123,286 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 25px;
+    font-weight: 400;
   }
+}
+
+/* Recipe detail: soft editorial page backdrop */
+.recipe-editorial-page {
+  background: linear-gradient(
+    165deg,
+    #f3f1ea 0%,
+    #faf8f3 38%,
+    #fffefb 70%,
+    #faf9f5 100%
+  );
+}
+
+.dark .recipe-editorial-page {
+  background: var(--background);
+}
+
+/* Recipe card — lifted, warm paper, crisp type */
+.oc-recipe-container {
+  --recipe-ink: #141414;
+  --recipe-body: #141414;
+  --recipe-sage: #535e50;
+  font-family: var(--font-sans);
+  background: linear-gradient(180deg, #fdfcfa 0%, #f8f7f2 100%);
+  color: var(--recipe-body);
+  border: 1px solid color-mix(in srgb, var(--recipe-sage) 18%, #d4d0c4);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.04),
+    0 12px 40px -12px rgb(45 42 38 / 0.18),
+    0 0 0 1px rgb(255 255 255 / 0.6) inset;
+}
+
+.dark .oc-recipe-container {
+  background: linear-gradient(180deg, oklch(0.22 0.02 50) 0%, oklch(0.19 0.02 50) 100%);
+  color: var(--card-foreground);
+  border-color: var(--border);
+  box-shadow: 0 8px 32px -8px rgb(0 0 0 / 0.4);
+}
+
+.oc-recipe-container :is(h2) {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--recipe-ink);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.dark .oc-recipe-container :is(h2) {
+  color: var(--foreground);
+}
+
+/* Bold section rails: Ingredients, Instructions, Notes, Nutrition */
+.oc-recipe-container .oc-recipe-section-title {
+  font-family: var(--font-serif);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--recipe-ink);
+  border-bottom: 3px solid color-mix(in srgb, var(--recipe-sage) 55%, transparent);
+  padding-bottom: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .oc-recipe-container .oc-recipe-section-title {
+    font-size: 1.5rem;
+  }
+}
+
+.dark .oc-recipe-container .oc-recipe-section-title {
+  color: var(--foreground);
+  border-bottom-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.oc-recipe-container .oc-recipe-ingredient-group-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: var(--recipe-ink);
+  letter-spacing: -0.015em;
+}
+
+.dark .oc-recipe-container .oc-recipe-ingredient-group-title {
+  color: var(--foreground);
+}
+
+.oc-recipe-container .oc-recipe-prose {
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+.oc-recipe-container .oc-recipe-summary {
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 400;
+  color: #141414;
+}
+
+.dark .oc-recipe-container .oc-recipe-summary {
+  color: var(--muted-foreground);
+}
+
+/* Instruction steps — orange filled circles (Panlasang-style yellow → your orange) */
+.oc-recipe-instruction-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/*
+ * Instruction step badge — compact like reference (~50–60% digit height vs circle),
+ * scaled to 18px body: ~22px cap, ~11px figures, flat fill (orange; ref was yellow).
+ */
+.oc-recipe-container .oc-recipe-step-num {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.375rem; /* 22px */
+  height: 1.375rem;
+  padding: 0 0.3125rem;
+  box-sizing: border-box;
+  border-radius: 9999px;
+  background: #f97316;
+  color: #000000;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem; /* 11px ≈ 50% of 22px */
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.dark .oc-recipe-container .oc-recipe-step-num {
+  background: #fb923c;
+  color: #0a0a0a;
+}
+
+.oc-recipe-container .oc-recipe-meta-label {
+  color: #6b6560;
+  font-weight: 600;
+}
+
+.dark .oc-recipe-container .oc-recipe-meta-label {
+  color: var(--muted-foreground);
+}
+
+.oc-recipe-container .oc-recipe-actions a,
+.oc-recipe-container .oc-recipe-actions button {
+  color: var(--recipe-ink);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.oc-recipe-container .oc-recipe-actions a:hover,
+.oc-recipe-container .oc-recipe-actions button:hover {
+  color: var(--primary);
+}
+
+.dark .oc-recipe-container .oc-recipe-actions a,
+.dark .oc-recipe-container .oc-recipe-actions button {
+  color: var(--foreground);
+}
+
+/* Recipe “story” / blog block (above recipe card) */
+.recipe-blog-content {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 25px;
+  font-weight: 400;
+  color: var(--recipe-ink, #141414);
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark .recipe-blog-content {
+  color: var(--foreground);
+}
+
+.recipe-blog-content :is(h2, h3) {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  line-height: 1.2;
+}
+
+.recipe-blog-content h2 {
+  font-size: 1.375rem;
+}
+
+.recipe-blog-content h3 {
+  font-size: 1.15rem;
+}
+
+.recipe-blog-content p {
+  margin: 0 0 0.85em;
+}
+
+.recipe-blog-content p:last-child {
+  margin-bottom: 0;
+}
+
+.recipe-blog-content ul,
+.recipe-blog-content ol {
+  margin: 0 0 0.85em 1.1em;
+  padding: 0;
+}
+
+.recipe-blog-content li {
+  margin-bottom: 0.35em;
+}
+
+.recipe-blog-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.recipe-blog-content a:hover {
+  opacity: 0.9;
+}
+
+.recipe-blog-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem 0;
+  border-radius: 0.125rem;
+  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+}
+
+.recipe-blog-content blockquote {
+  margin: 1rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid var(--muted-foreground);
+  color: var(--muted-foreground);
+}
+
+.recipe-blog-content hr {
+  margin: 1.5rem 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.recipe-blog-content [data-youtube-video] {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  margin: 1.25rem auto;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.recipe-blog-content [data-youtube-video] iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0.125rem;
+}
+
+/* Admin TipTap */
+.tiptap.recipe-rich-text-editor-inner p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: var(--muted-foreground);
+  pointer-events: none;
+  height: 0;
 }

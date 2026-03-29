@@ -18,7 +18,22 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Plus, X } from 'lucide-react';
+import { RecipeRichTextEditor } from '@/components/admin/recipe-rich-text-editor';
 import type { Category, Recipe } from '@/lib/types/database';
+
+function normalizeBlogHtml(html: string): string | null {
+  const t = html.trim();
+  if (!t) return null;
+  if (/<(img\b|iframe\b|div[^>]*\bdata-youtube-video)/i.test(t)) return t;
+  const textOnly = t.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+  return textOnly.length ? t : null;
+}
+
+function coalesceStringArrayField(value: unknown): string[] {
+  if (!Array.isArray(value)) return [''];
+  const strings = value.filter((item): item is string => typeof item === 'string');
+  return strings.length > 0 ? strings : [''];
+}
 
 interface RecipeFormProps {
   locale: string;
@@ -34,7 +49,8 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
   // Form state
   const [titleEn, setTitleEn] = useState(recipe?.title_en || '');
   const [titleFr, setTitleFr] = useState(recipe?.title_fr || '');
-  const [slug, setSlug] = useState(recipe?.slug || '');
+  const [slugEn, setSlugEn] = useState(recipe?.slug_en || '');
+  const [slugFr, setSlugFr] = useState(recipe?.slug_fr || '');
   const [descriptionEn, setDescriptionEn] = useState(recipe?.description_en || '');
   const [descriptionFr, setDescriptionFr] = useState(recipe?.description_fr || '');
   const [ingredientsEn, setIngredientsEn] = useState<string[]>(
@@ -49,8 +65,22 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
   const [instructionsFr, setInstructionsFr] = useState<string[]>(
     recipe?.instructions_fr || ['']
   );
-  const [prepTime, setPrepTime] = useState(recipe?.prep_time?.toString() || '');
-  const [cookTime, setCookTime] = useState(recipe?.cook_time?.toString() || '');
+  const [blogEn, setBlogEn] = useState(recipe?.blog_en || '');
+  const [blogFr, setBlogFr] = useState(recipe?.blog_fr || '');
+  const [notesEn, setNotesEn] = useState(recipe?.notes_en || '');
+  const [notesFr, setNotesFr] = useState(recipe?.notes_fr || '');
+  const [nutritionEn, setNutritionEn] = useState<string[]>(
+    coalesceStringArrayField(recipe?.nutrition_en)
+  );
+  const [nutritionFr, setNutritionFr] = useState<string[]>(
+    coalesceStringArrayField(recipe?.nutrition_fr)
+  );
+  const [prepTime, setPrepTime] = useState(
+    recipe?.prep_time_minutes?.toString() || ''
+  );
+  const [cookTime, setCookTime] = useState(
+    recipe?.cook_time_minutes?.toString() || ''
+  );
   const [servings, setServings] = useState(recipe?.servings?.toString() || '');
   const [difficulty, setDifficulty] = useState(recipe?.difficulty || '');
   const [categoryId, setCategoryId] = useState(recipe?.category_id || '');
@@ -58,12 +88,20 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
   const [isFeatured, setIsFeatured] = useState(recipe?.is_featured || false);
   const [isPublished, setIsPublished] = useState(recipe?.is_published || false);
 
-  const generateSlug = () => {
-    const generatedSlug = titleEn
+  const slugify = (title: string) =>
+    title
       .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{M}/gu, '')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
-    setSlug(generatedSlug);
+
+  const generateSlugEn = () => {
+    setSlugEn(slugify(titleEn));
+  };
+
+  const generateSlugFr = () => {
+    setSlugFr(slugify(titleFr));
   };
 
   const handleArrayChange = (
@@ -100,15 +138,22 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
     const recipeData = {
       title_en: titleEn,
       title_fr: titleFr,
-      slug,
+      slug_en: slugEn.trim(),
+      slug_fr: slugFr.trim() || null,
       description_en: descriptionEn,
       description_fr: descriptionFr,
       ingredients_en: ingredientsEn.filter((i) => i.trim()),
       ingredients_fr: ingredientsFr.filter((i) => i.trim()),
       instructions_en: instructionsEn.filter((i) => i.trim()),
       instructions_fr: instructionsFr.filter((i) => i.trim()),
-      prep_time: prepTime ? parseInt(prepTime) : null,
-      cook_time: cookTime ? parseInt(cookTime) : null,
+      blog_en: normalizeBlogHtml(blogEn),
+      blog_fr: normalizeBlogHtml(blogFr),
+      notes_en: notesEn.trim() || null,
+      notes_fr: notesFr.trim() || null,
+      nutrition_en: nutritionEn.filter((i) => i.trim()),
+      nutrition_fr: nutritionFr.filter((i) => i.trim()),
+      prep_time_minutes: prepTime ? parseInt(prepTime, 10) : null,
+      cook_time_minutes: cookTime ? parseInt(cookTime, 10) : null,
       servings: servings ? parseInt(servings) : null,
       difficulty: difficulty || null,
       category_id: categoryId || null,
@@ -158,7 +203,7 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
                 id="titleEn"
                 value={titleEn}
                 onChange={(e) => setTitleEn(e.target.value)}
-                onBlur={generateSlug}
+                onBlur={generateSlugEn}
                 required
               />
             </div>
@@ -168,18 +213,30 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
                 id="titleFr"
                 value={titleFr}
                 onChange={(e) => setTitleFr(e.target.value)}
+                onBlur={generateSlugFr}
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slug">Slug</Label>
+              <Label htmlFor="slugEn">Slug (English URL)</Label>
             <Input
-              id="slug"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
+              id="slugEn"
+              value={slugEn}
+              onChange={(e) => setSlugEn(e.target.value)}
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="slugFr">Slug (French URL)</Label>
+            <Input
+              id="slugFr"
+              value={slugFr}
+              onChange={(e) => setSlugFr(e.target.value)}
+              onBlur={generateSlugFr}
+              placeholder="optional — falls back to English slug in /fr/…"
             />
           </div>
 
@@ -211,6 +268,42 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://example.com/image.jpg"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Story / blog (above recipe card on public page) */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-serif">
+            {locale === 'fr' ? 'Article (au-dessus de la fiche)' : 'Story (above recipe card)'}
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            {locale === 'fr'
+              ? 'Texte riche avec images (URL) et vidéos YouTube. Affiché sous le titre sur la page recette.'
+              : 'Rich text with images (paste URL) and YouTube embeds. Shown under the title on the recipe page.'}
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="blogEn">English</Label>
+            <RecipeRichTextEditor
+              key={`blog-en-${recipe?.id ?? 'new'}`}
+              id="blogEn"
+              value={blogEn}
+              onChange={setBlogEn}
+              placeholder="Intro, tips, story… Use the toolbar for image URL or YouTube link."
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="blogFr">Français</Label>
+            <RecipeRichTextEditor
+              key={`blog-fr-${recipe?.id ?? 'new'}`}
+              id="blogFr"
+              value={blogFr}
+              onChange={setBlogFr}
+              placeholder="Intro, astuces… Images (URL) et YouTube comme en anglais."
             />
           </div>
         </CardContent>
@@ -454,6 +547,122 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => addArrayItem(instructionsFr, setInstructionsFr)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Ajouter
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Notes & nutrition */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-serif">
+            {locale === 'fr' ? 'Notes et nutrition' : 'Notes & nutrition'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="notesEn">Notes (English)</Label>
+              <Textarea
+                id="notesEn"
+                value={notesEn}
+                onChange={(e) => setNotesEn(e.target.value)}
+                rows={4}
+                placeholder="Substitutions, make-ahead tips, etc."
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="notesFr">Notes (Français)</Label>
+              <Textarea
+                id="notesFr"
+                value={notesFr}
+                onChange={(e) => setNotesFr(e.target.value)}
+                rows={4}
+                placeholder="Substitutions, astuces…"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Nutrition facts (English)</Label>
+              <p className="text-xs text-muted-foreground">
+                One line per fact, e.g. Calories: 798 kcal (40%)
+              </p>
+              {nutritionEn.map((line, index) => (
+                <div key={index} className="flex gap-2">
+                  <Input
+                    value={line}
+                    onChange={(e) =>
+                      handleArrayChange(
+                        index,
+                        e.target.value,
+                        nutritionEn,
+                        setNutritionEn
+                      )
+                    }
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() =>
+                      removeArrayItem(index, nutritionEn, setNutritionEn)
+                    }
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => addArrayItem(nutritionEn, setNutritionEn)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add line
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <Label>Nutrition (Français)</Label>
+              <p className="text-xs text-muted-foreground">
+                Une ligne par donnée, ex. Calories : 798 kcal (40 %)
+              </p>
+              {nutritionFr.map((line, index) => (
+                <div key={index} className="flex gap-2">
+                  <Input
+                    value={line}
+                    onChange={(e) =>
+                      handleArrayChange(
+                        index,
+                        e.target.value,
+                        nutritionFr,
+                        setNutritionFr
+                      )
+                    }
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() =>
+                      removeArrayItem(index, nutritionFr, setNutritionFr)
+                    }
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => addArrayItem(nutritionFr, setNutritionFr)}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Ajouter

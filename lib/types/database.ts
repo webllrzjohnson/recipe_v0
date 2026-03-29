@@ -2,7 +2,8 @@ export interface Category {
   id: string;
   name_en: string;
   name_fr: string;
-  slug: string;
+  slug_en: string;
+  slug_fr: string | null;
   description_en: string | null;
   description_fr: string | null;
   image_url: string | null;
@@ -14,15 +15,22 @@ export interface Recipe {
   id: string;
   title_en: string;
   title_fr: string;
-  slug: string;
+  slug_en: string;
+  slug_fr: string | null;
   description_en: string | null;
   description_fr: string | null;
   ingredients_en: string[];
   ingredients_fr: string[];
   instructions_en: string[];
   instructions_fr: string[];
-  prep_time: number | null;
-  cook_time: number | null;
+  notes_en: string | null;
+  notes_fr: string | null;
+  blog_en?: string | null;
+  blog_fr?: string | null;
+  nutrition_en: string[];
+  nutrition_fr: string[];
+  prep_time_minutes: number | null;
+  cook_time_minutes: number | null;
   servings: number | null;
   difficulty: 'easy' | 'medium' | 'hard' | null;
   image_url: string | null;
@@ -45,6 +53,7 @@ export interface BlogPost {
   excerpt_fr: string | null;
   image_url: string | null;
   is_published: boolean;
+  published_at: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -73,6 +82,9 @@ export interface LocalizedRecipe {
   description: string | null;
   ingredients: string[];
   instructions: string[];
+  notes: string | null;
+  blog: string | null;
+  nutrition: string[];
   prep_time: number | null;
   cook_time: number | null;
   servings: number | null;

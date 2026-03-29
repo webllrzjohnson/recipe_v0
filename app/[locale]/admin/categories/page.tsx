@@ -67,7 +67,10 @@ export default async function AdminCategoriesPage({
                       {locale === 'fr' ? category.name_fr : category.name_en}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {category.slug}
+                      {category.slug_en}
+                      {category.slug_fr
+                        ? ` · ${category.slug_fr}`
+                        : ''}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">

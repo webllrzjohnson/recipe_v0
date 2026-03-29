@@ -8,6 +8,7 @@ import { CategoryGrid } from '@/components/home/category-grid';
 import { localizeRecipe, localizeCategory } from '@/lib/utils/localize';
 import type { Locale } from '@/i18n/config';
 import type { Recipe, Category } from '@/lib/types/database';
+import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
 
 export async function generateMetadata({
   params,
@@ -16,11 +17,15 @@ export async function generateMetadata({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'home' });
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
 
-  return {
+  return buildPageMetadata({
+    locale,
+    pathname: '',
     title: t('heroTitle'),
     description: t('heroSubtitle'),
-  };
+    siteName: tCommon('siteName'),
+  });
 }
 
 export default async function HomePage({
@@ -33,14 +38,17 @@ export default async function HomePage({
 
   const supabase = await createClient();
 
-  // Fetch featured recipes
-  const { data: recipesData } = await supabase
+  const { data: recipesData, error: recipesError } = await supabase
     .from('recipes')
     .select('*, category:categories(*)')
     .eq('is_published', true)
     .eq('is_featured', true)
     .order('created_at', { ascending: false })
     .limit(3);
+
+  if (recipesError && process.env.NODE_ENV === 'development') {
+    console.error('[home featured recipes]', recipesError.message);
+  }
 
   // Fetch categories
   const { data: categoriesData } = await supabase

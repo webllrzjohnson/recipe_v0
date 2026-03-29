@@ -15,7 +15,11 @@
     "backToCategories": "Back to Categories",
     "loading": "Loading...",
     "noResults": "No results found",
-    "error": "Something went wrong"
+    "error": "Something went wrong",
+    "loadMore": "Load more",
+    "retry": "Try again",
+    "searchRecipesPlaceholder": "Search by title, description, or slug…",
+    "recipeCountShowing": "{count, plural, =0 {No recipes} one {# recipe} other {# recipes}}"
   },
   "home": {
     "heroTitle": "Discover Authentic Filipino Flavors",
@@ -36,17 +40,46 @@
     "difficulty": "Difficulty",
     "ingredients": "Ingredients",
     "instructions": "Instructions",
+    "notes": "Notes",
+    "nutritionInformation": "Nutrition information",
     "minutes": "min",
     "easy": "Easy",
     "medium": "Medium",
     "hard": "Hard",
     "step": "Step",
-    "relatedRecipes": "You Might Also Like"
+    "storyHeading": "From the kitchen",
+    "relatedRecipes": "You Might Also Like",
+    "metaPrep": "Prep:",
+    "metaCook": "Cook:",
+    "printRecipe": "Print recipe",
+    "emailRecipe": "Email",
+    "shareRecipe": "Share",
+    "shareRecipeAria": "Share this recipe",
+    "shareNative": "Share via device…",
+    "copyLink": "Copy link",
+    "linkCopied": "Copied!",
+    "shareOnSocial": "Social & messaging",
+    "shareFacebook": "Facebook",
+    "shareX": "X",
+    "sharePinterest": "Pinterest",
+    "shareLinkedIn": "LinkedIn",
+    "shareWhatsApp": "WhatsApp"
   },
   "category": {
     "allCategories": "All Categories",
     "recipesIn": "Recipes in {category}",
     "recipeCount": "{count, plural, =0 {No recipes} =1 {1 recipe} other {# recipes}}"
+  },
+  "seo": {
+    "recipesListingDescription": "Browse all published Filipino recipes with clear steps, times, and serving sizes on Sarap Kitchen.",
+    "categoriesListingDescription": "Explore recipe categories — from classics to modern Filipino dishes — and find your next meal.",
+    "categoryPageDescriptionFallback": "Filipino recipes in {name} — ingredients, instructions, and tips on Sarap Kitchen.",
+    "blogListingDescription": "Stories, tips, and news from Sarap Kitchen — Filipino cooking, pantry guides, and more."
+  },
+  "blogPage": {
+    "intro": "Stories, tips, and culinary inspiration from our kitchen to yours.",
+    "backToBlog": "Back to blog",
+    "publishedOn": "Published {date}"
   },
   "about": {
     "title": "About Sarap Kitchen",

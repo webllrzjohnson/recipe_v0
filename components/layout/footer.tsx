@@ -9,6 +9,7 @@ export function Footer() {
     { href: '/', label: t('common.home') },
     { href: '/recipes', label: t('common.recipes') },
     { href: '/categories', label: t('common.categories') },
+    { href: '/blog', label: t('common.blog') },
     { href: '/about', label: t('common.about') },
   ];
 

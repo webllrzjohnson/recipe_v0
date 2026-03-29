@@ -36,7 +36,8 @@ export function CategoryFormDialog({
 
   const [nameEn, setNameEn] = useState(category?.name_en || '');
   const [nameFr, setNameFr] = useState(category?.name_fr || '');
-  const [slug, setSlug] = useState(category?.slug || '');
+  const [slugEn, setSlugEn] = useState(category?.slug_en || '');
+  const [slugFr, setSlugFr] = useState(category?.slug_fr || '');
   const [descriptionEn, setDescriptionEn] = useState(
     category?.description_en || ''
   );
@@ -45,12 +46,20 @@ export function CategoryFormDialog({
   );
   const [imageUrl, setImageUrl] = useState(category?.image_url || '');
 
-  const generateSlug = () => {
-    const generatedSlug = nameEn
+  const slugify = (name: string) =>
+    name
       .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{M}/gu, '')
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
-    setSlug(generatedSlug);
+
+  const generateSlugEn = () => {
+    setSlugEn(slugify(nameEn));
+  };
+
+  const generateSlugFr = () => {
+    setSlugFr(slugify(nameFr));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -126,7 +135,7 @@ export function CategoryFormDialog({
                 id="nameEn"
                 value={nameEn}
                 onChange={(e) => setNameEn(e.target.value)}
-                onBlur={generateSlug}
+                onBlur={generateSlugEn}
                 required
               />
             </div>
@@ -136,18 +145,30 @@ export function CategoryFormDialog({
                 id="nameFr"
                 value={nameFr}
                 onChange={(e) => setNameFr(e.target.value)}
+                onBlur={generateSlugFr}
                 required
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slug">Slug</Label>
+            <Label htmlFor="slugEn">Slug (English URL)</Label>
             <Input
-              id="slug"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
+              id="slugEn"
+              value={slugEn}
+              onChange={(e) => setSlugEn(e.target.value)}
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="slugFr">Slug (French URL)</Label>
+            <Input
+              id="slugFr"
+              value={slugFr}
+              onChange={(e) => setSlugFr(e.target.value)}
+              onBlur={generateSlugFr}
+              placeholder="optional"
             />
           </div>
 

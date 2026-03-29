@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { ChefHat, Heart, Users } from 'lucide-react';
+import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
 
 export async function generateMetadata({
   params,
@@ -11,11 +12,15 @@ export async function generateMetadata({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'about' });
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
 
-  return {
+  return buildPageMetadata({
+    locale,
+    pathname: '/about',
     title: t('title'),
     description: t('subtitle'),
-  };
+    siteName: tCommon('siteName'),
+  });
 }
 
 export default async function AboutPage({

@@ -15,7 +15,11 @@
     "backToCategories": "Retour aux catégories",
     "loading": "Chargement...",
     "noResults": "Aucun résultat trouvé",
-    "error": "Une erreur s'est produite"
+    "error": "Une erreur s'est produite",
+    "loadMore": "Charger plus",
+    "retry": "Réessayer",
+    "searchRecipesPlaceholder": "Recherche par titre, description ou URL…",
+    "recipeCountShowing": "{count, plural, =0 {Aucune recette} one {# recette} other {# recettes}}"
   },
   "home": {
     "heroTitle": "Découvrez les Saveurs Authentiques des Philippines",
@@ -36,17 +40,46 @@
     "difficulty": "Difficulté",
     "ingredients": "Ingrédients",
     "instructions": "Instructions",
+    "notes": "Notes",
+    "nutritionInformation": "Informations nutritionnelles",
     "minutes": "min",
     "easy": "Facile",
     "medium": "Moyen",
     "hard": "Difficile",
     "step": "Étape",
-    "relatedRecipes": "Vous Aimerez Aussi"
+    "storyHeading": "Du côté cuisine",
+    "relatedRecipes": "Vous Aimerez Aussi",
+    "metaPrep": "Préparation :",
+    "metaCook": "Cuisson :",
+    "printRecipe": "Imprimer la recette",
+    "emailRecipe": "Courriel",
+    "shareRecipe": "Partager",
+    "shareRecipeAria": "Partager cette recette",
+    "shareNative": "Partager via l’appareil…",
+    "copyLink": "Copier le lien",
+    "linkCopied": "Copié !",
+    "shareOnSocial": "Réseaux et messages",
+    "shareFacebook": "Facebook",
+    "shareX": "X",
+    "sharePinterest": "Pinterest",
+    "shareLinkedIn": "LinkedIn",
+    "shareWhatsApp": "WhatsApp"
   },
   "category": {
     "allCategories": "Toutes les Catégories",
     "recipesIn": "Recettes dans {category}",
     "recipeCount": "{count, plural, =0 {Aucune recette} =1 {1 recette} other {# recettes}}"
+  },
+  "seo": {
+    "recipesListingDescription": "Parcourez toutes nos recettes philippines publiées, avec étapes, temps et portions, sur Sarap Kitchen.",
+    "categoriesListingDescription": "Explorez les catégories — des classiques aux plats modernes — et trouvez votre prochain repas.",
+    "categoryPageDescriptionFallback": "Recettes philippines : {name} — ingrédients, étapes et conseils sur Sarap Kitchen.",
+    "blogListingDescription": "Histoires, conseils et nouvelles de Sarap Kitchen — cuisine philippine, garde-manger, et plus."
+  },
+  "blogPage": {
+    "intro": "Histoires, conseils et inspiration culinaire de notre cuisine à la vôtre.",
+    "backToBlog": "Retour au blogue",
+    "publishedOn": "Publié le {date}"
   },
   "about": {
     "title": "À propos de Sarap Kitchen",

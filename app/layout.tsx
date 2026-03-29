@@ -1,21 +1,27 @@
 import type { Metadata } from 'next';
-import { Lora, Source_Sans_3 } from 'next/font/google';
+import { Libre_Baskerville, Raleway } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
+import { getMetadataBase } from '@/lib/seo/site-url';
 import './globals.css';
 
-const lora = Lora({
+/** Headings stay Baskerville; UI & body use Raleway 400 + your fallbacks (see globals @theme --font-sans). */
+const libreBaskerville = Libre_Baskerville({
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
   subsets: ['latin'],
-  variable: '--font-lora',
+  variable: '--font-serif',
   display: 'swap',
 });
 
-const sourceSans = Source_Sans_3({
+const raleway = Raleway({
+  weight: '400',
   subsets: ['latin'],
-  variable: '--font-source-sans',
+  variable: '--font-raleway',
   display: 'swap',
 });
 
 export const metadata: Metadata = {
+  metadataBase: getMetadataBase(),
   title: {
     default: 'Sarap Kitchen - Authentic Filipino Recipes',
     template: '%s | Sarap Kitchen',
@@ -58,7 +64,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body
-        className={`${lora.variable} ${sourceSans.variable} font-sans antialiased`}
+        className={`${libreBaskerville.variable} ${raleway.variable} font-sans antialiased`}
       >
         {children}
         <Analytics />

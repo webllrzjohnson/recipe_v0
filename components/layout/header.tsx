@@ -25,6 +25,7 @@ export function Header() {
     { href: '/', label: t('home') },
     { href: '/recipes', label: t('recipes') },
     { href: '/categories', label: t('categories') },
+    { href: '/blog', label: t('blog') },
     { href: '/about', label: t('about') },
   ];
 
@@ -39,7 +40,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
             <ChefHat className="h-8 w-8 text-primary" />
-            <span className="font-serif text-xl font-bold text-foreground">
+            <span className="font-serif text-xl font-bold tracking-tight text-foreground">
               {t('siteName')}
             </span>
           </Link>

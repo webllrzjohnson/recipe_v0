@@ -6,6 +6,7 @@ import { CategoryCard } from '@/components/categories/category-card';
 import { localizeCategory } from '@/lib/utils/localize';
 import type { Locale } from '@/i18n/config';
 import type { Category } from '@/lib/types/database';
+import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
 
 export async function generateMetadata({
   params,
@@ -14,10 +15,16 @@ export async function generateMetadata({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'category' });
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
+  const tSeo = await getTranslations({ locale, namespace: 'seo' });
 
-  return {
+  return buildPageMetadata({
+    locale,
+    pathname: '/categories',
     title: t('allCategories'),
-  };
+    description: tSeo('categoriesListingDescription'),
+    siteName: tCommon('siteName'),
+  });
 }
 
 export default async function CategoriesPage({

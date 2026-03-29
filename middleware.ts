@@ -5,17 +5,32 @@ import { routing } from '@/i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 
+const localePattern = routing.locales.join('|');
+
+function pathnameWithoutLocaleSegment(pathname: string): string {
+  return pathname.replace(new RegExp(`^\\/(${localePattern})`), '') || '/';
+}
+
+function localeFromPathname(pathname: string): string {
+  const match = pathname.match(new RegExp(`^\\/(${localePattern})(?:\\/|$)`));
+  return match?.[1] ?? routing.defaultLocale;
+}
+
+function isAdminLoginPath(pathWithoutLocale: string): boolean {
+  return (
+    pathWithoutLocale === '/admin/login' ||
+    pathWithoutLocale.startsWith('/admin/login?')
+  );
+}
+
 export async function middleware(request: NextRequest) {
   // First, handle i18n routing
   const intlResponse = intlMiddleware(request);
 
-  // Get the pathname without locale prefix
   const pathname = request.nextUrl.pathname;
-  const pathnameWithoutLocale = pathname.replace(/^\/(en|fr)/, '');
+  const pathWithoutLocale = pathnameWithoutLocaleSegment(pathname);
 
-  // Check if this is an admin route that needs auth protection
-  if (pathnameWithoutLocale.startsWith('/admin')) {
-    // Create Supabase client for auth check
+  if (pathWithoutLocale.startsWith('/admin')) {
     let supabaseResponse = intlResponse;
 
     const supabase = createServerClient(
@@ -43,15 +58,29 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // If no user and trying to access admin (excluding login page), redirect to login
-    if (!user && !pathnameWithoutLocale.startsWith('/admin/login')) {
-      const locale = pathname.match(/^\/(en|fr)/)?.[1] || 'en';
-      const url = request.nextUrl.clone();
-      url.pathname = `/${locale}/admin/login`;
-      return NextResponse.redirect(url);
+    const locale = localeFromPathname(pathname);
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = `/${locale}/admin/login`;
+
+    if (!user && !isAdminLoginPath(pathWithoutLocale)) {
+      return NextResponse.redirect(loginUrl);
     }
 
-    // Copy cookies from intl response to ensure session is maintained
+    if (
+      user &&
+      !isAdminLoginPath(pathWithoutLocale)
+    ) {
+      const { data: profile } = await supabase
+        .from('admin_profiles')
+        .select('is_admin')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!profile?.is_admin) {
+        return NextResponse.redirect(loginUrl);
+      }
+    }
+
     const response = intlResponse;
     supabaseResponse.cookies.getAll().forEach((cookie) => {
       response.cookies.set(cookie.name, cookie.value);

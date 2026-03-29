@@ -6,6 +6,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function HeroSection() {
   const t = useTranslations('home');
+  const tCommon = useTranslations('common');
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/5">
@@ -35,9 +36,14 @@ export function HeroSection() {
           {/* CTA */}
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild size="lg" className="gap-2">
-              <Link href="/recipes">
+              <Link href="/recipes" prefetch>
                 {t('exploreRecipes')}
                 <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link href="/blog" prefetch>
+                {tCommon('blog')}
               </Link>
             </Button>
           </div>

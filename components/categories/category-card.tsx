@@ -10,7 +10,7 @@ interface CategoryCardProps {
 
 export function CategoryCard({ category, recipeCount }: CategoryCardProps) {
   return (
-    <Link href={`/categories/${category.slug}`}>
+    <Link href={`/categories/${category.slug}`} prefetch>
       <Card className="group relative h-48 overflow-hidden">
         {/* Background Image */}
         <Image

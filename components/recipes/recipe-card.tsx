@@ -21,7 +21,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
     : null;
 
   return (
-    <Link href={`/recipes/${recipe.slug}`}>
+    <Link href={`/recipes/${recipe.slug}`} prefetch>
       <Card className="group h-full overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
         {/* Image */}
         <div className="relative aspect-[4/3] overflow-hidden">
@@ -29,6 +29,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             src={recipe.image_url || 'https://placehold.co/800x600/C0392B/FFFFFF?text=Recipe'}
             alt={recipe.title}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
           {recipe.is_featured && (
@@ -47,7 +48,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           )}
 
           {/* Title */}
-          <h3 className="mb-2 font-serif text-lg font-semibold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
+          <h3 className="mb-2 font-serif text-lg font-bold text-foreground line-clamp-2 group-hover:text-primary transition-colors">
             {recipe.title}
           </h3>
 

@@ -9,6 +9,9 @@ import { localizeCategory, localizeRecipe } from '@/lib/utils/localize';
 import { ArrowLeft } from 'lucide-react';
 import type { Locale } from '@/i18n/config';
 import type { Category, Recipe } from '@/lib/types/database';
+import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
+import { categoryAlternatePathnames } from '@/lib/seo/entity-paths';
+import { fetchCategoryByUrlSlug } from '@/lib/supabase/fetch-by-url-slug';
 
 export async function generateMetadata({
   params,
@@ -17,24 +20,45 @@ export async function generateMetadata({
 }) {
   const { locale, slug } = await params;
   const supabase = await createClient();
+  const tCommon = await getTranslations({ locale, namespace: 'common' });
+  const tSeo = await getTranslations({ locale, namespace: 'seo' });
 
-  const { data: category } = await supabase
-    .from('categories')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  const { data: category, error: metaErr } = await fetchCategoryByUrlSlug(
+    supabase,
+    slug
+  );
+
+  if (metaErr && process.env.NODE_ENV === 'development') {
+    console.error('[category metadata]', metaErr.message);
+  }
 
   if (!category) {
-    return { title: 'Category Not Found' };
+    return {
+      title: 'Category Not Found',
+      robots: { index: false, follow: false },
+    };
   }
 
   const name = locale === 'fr' ? category.name_fr : category.name_en;
-  const description = locale === 'fr' ? category.description_fr : category.description_en;
+  const rawDescription =
+    (locale === 'fr' ? category.description_fr : category.description_en)?.trim() ||
+    null;
+  const description =
+    rawDescription ?? tSeo('categoryPageDescriptionFallback', { name });
 
-  return {
+  const ogImages = category.image_url?.trim()
+    ? [category.image_url.trim()]
+    : undefined;
+
+  return buildPageMetadata({
+    locale,
+    pathname: `/categories/${slug}`,
     title: name,
     description,
-  };
+    ogImages,
+    siteName: tCommon('siteName'),
+    alternatePathnames: categoryAlternatePathnames(category),
+  });
 }
 
 export default async function CategoryDetailPage({
@@ -49,11 +73,14 @@ export default async function CategoryDetailPage({
 
   const supabase = await createClient();
 
-  const { data: categoryData } = await supabase
-    .from('categories')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+  const { data: categoryData, error: catErr } = await fetchCategoryByUrlSlug(
+    supabase,
+    slug
+  );
+
+  if (catErr && process.env.NODE_ENV === 'development') {
+    console.error('[category detail]', catErr.message);
+  }
 
   if (!categoryData) {
     notFound();
@@ -62,12 +89,16 @@ export default async function CategoryDetailPage({
   const category = localizeCategory(categoryData as Category, locale as Locale);
 
   // Fetch recipes in this category
-  const { data: recipesData } = await supabase
+  const { data: recipesData, error: recipesError } = await supabase
     .from('recipes')
     .select('*, category:categories(*)')
     .eq('category_id', categoryData.id)
     .eq('is_published', true)
     .order('created_at', { ascending: false });
+
+  if (recipesError && process.env.NODE_ENV === 'development') {
+    console.error('[category recipes]', recipesError.message);
+  }
 
   const recipes = (recipesData as (Recipe & { category: Category })[] || []).map(
     (recipe) => localizeRecipe(recipe, locale as Locale)

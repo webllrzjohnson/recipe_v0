@@ -20,3 +20,8 @@ node_modules
 .next/
 .DS_Store
 *.tsbuildinfo
+
+# Tests
+test-results/
+playwright-report/
+playwright/.cache/
