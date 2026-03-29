@@ -158,3 +158,8 @@ $b$,
 <blockquote><p>Ajoutez les légumes verts à la toute fin pour garder couleur et croquant.</p></blockquote>
 $b$
 WHERE slug_en = 'sinigang-na-baboy';
+
+-- Default site settings (AdSense off until configured in admin)
+INSERT INTO site_settings (id, ads_enabled, adsense_publisher_id, adsense_placements)
+VALUES (1, FALSE, NULL, '{}'::jsonb)
+ON CONFLICT (id) DO NOTHING;

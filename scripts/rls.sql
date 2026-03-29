@@ -4,6 +4,7 @@ ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE admin_profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
 
 -- Read admin flag without recursive admin_profiles policies
 CREATE OR REPLACE FUNCTION public.auth_is_admin()
@@ -56,3 +57,23 @@ CREATE POLICY "Admins can manage blog posts" ON blog_posts FOR ALL
 CREATE POLICY "Users can view own profile" ON admin_profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Admins can view all profiles" ON admin_profiles FOR SELECT
   USING (public.auth_is_admin());
+
+DROP POLICY IF EXISTS "Public can read site settings" ON site_settings;
+DROP POLICY IF EXISTS "Admins can manage site settings" ON site_settings;
+
+CREATE POLICY "Public can read site settings" ON site_settings FOR SELECT USING (TRUE);
+
+CREATE POLICY "Admins can manage site settings" ON site_settings FOR ALL
+  USING (public.auth_is_admin())
+  WITH CHECK (public.auth_is_admin());
+
+ALTER TABLE static_pages ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "Public can read static pages" ON static_pages;
+DROP POLICY IF EXISTS "Admins can manage static pages" ON static_pages;
+
+CREATE POLICY "Public can read static pages" ON static_pages FOR SELECT USING (TRUE);
+
+CREATE POLICY "Admins can manage static pages" ON static_pages FOR ALL
+  USING (public.auth_is_admin())
+  WITH CHECK (public.auth_is_admin());

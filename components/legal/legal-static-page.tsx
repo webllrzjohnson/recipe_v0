@@ -1,20 +1,20 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { LegalDocument } from '@/components/legal/legal-document';
-import { getLegalPage, type LegalPageSlug } from '@/lib/legal';
-import type { Locale } from '@/i18n/config';
+import type { LegalPageSlug } from '@/lib/legal';
+import { copy } from '@/lib/copy';
+import { resolveLegalPageForPublic } from '@/lib/static-pages/resolve';
+import { createAnonServerClient } from '@/lib/supabase/anon-server';
 
-export async function LegalStaticPage({
-  locale,
-  slug,
-}: {
-  locale: string;
-  slug: LegalPageSlug;
-}) {
-  setRequestLocale(locale);
-  const content = getLegalPage(slug, locale as Locale);
-  const t = await getTranslations({ locale, namespace: 'legal' });
+const legal = copy.legal;
+
+export async function LegalStaticPage({ slug }: { slug: LegalPageSlug }) {
+  const supabase = createAnonServerClient();
+  const { content, lastUpdated } = await resolveLegalPageForPublic(
+    supabase,
+    slug,
+    legal.lastUpdatedDate
+  );
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -28,12 +28,12 @@ export async function LegalStaticPage({
           <div className="mt-10">
             <LegalDocument
               content={content}
-              lastUpdatedLabel={t('lastUpdated')}
-              lastUpdated={t('lastUpdatedDate')}
+              lastUpdatedLabel={legal.lastUpdated}
+              lastUpdated={lastUpdated}
             />
           </div>
           <p className="mt-12 border-t border-border pt-8 text-sm text-muted-foreground italic">
-            {t('attorneyReview')}
+            {legal.attorneyReview}
           </p>
         </div>
       </main>

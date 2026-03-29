@@ -66,6 +66,14 @@ export interface AdminProfile {
   updated_at: string;
 }
 
+export interface SiteSettings {
+  id: number;
+  ads_enabled: boolean;
+  adsense_publisher_id: string | null;
+  adsense_placements: Record<string, unknown>;
+  updated_at: string;
+}
+
 // Localized types for use in components
 export interface LocalizedCategory {
   id: string;

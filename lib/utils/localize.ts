@@ -1,4 +1,3 @@
-import type { Locale } from '@/i18n/config';
 import type {
   Category,
   Recipe,
@@ -21,64 +20,46 @@ function jsonbStringArray(value: unknown): string[] {
   return value.filter((item): item is string => typeof item === 'string');
 }
 
-/** Use primary locale; if empty, fall back so notes/nutrition still show when only one language is filled. */
-function pickNotes(
-  locale: Locale,
-  recipe: Recipe
-): string | null {
+function pickNotes(recipe: Recipe): string | null {
   const en = recipe.notes_en?.trim() || null;
   const fr = recipe.notes_fr?.trim() || null;
-  if (locale === 'fr') return fr ?? en;
   return en ?? fr;
 }
 
-function pickNutrition(locale: Locale, recipe: Recipe): string[] {
+function pickNutrition(recipe: Recipe): string[] {
   const en = jsonbStringArray(recipe.nutrition_en);
   const fr = jsonbStringArray(recipe.nutrition_fr);
-  if (locale === 'fr') return fr.length > 0 ? fr : en;
   return en.length > 0 ? en : fr;
 }
 
-function pickBlog(locale: Locale, recipe: Recipe): string | null {
+function pickBlog(recipe: Recipe): string | null {
   const en = recipe.blog_en?.trim() || null;
   const fr = recipe.blog_fr?.trim() || null;
-  if (locale === 'fr') return fr ?? en;
   return en ?? fr;
 }
 
-export function localizeCategory(
-  category: Category,
-  locale: Locale
-): LocalizedCategory {
-  const slugFr = category.slug_fr?.trim();
+export function localizeCategory(category: Category): LocalizedCategory {
   return {
     id: category.id,
-    name: locale === 'fr' ? category.name_fr : category.name_en,
-    slug:
-      locale === 'fr'
-        ? slugFr || category.slug_en
-        : category.slug_en,
-    description:
-      locale === 'fr' ? category.description_fr : category.description_en,
+    name: category.name_en,
+    slug: category.slug_en,
+    description: category.description_en,
     image_url: category.image_url,
   };
 }
 
-export function localizeRecipe(recipe: Recipe, locale: Locale): LocalizedRecipe {
-  const slugFr = recipe.slug_fr?.trim();
+export function localizeRecipe(recipe: Recipe): LocalizedRecipe {
+  const slugEn = recipe.slug_en?.trim() || '';
   return {
     id: recipe.id,
-    title: locale === 'fr' ? recipe.title_fr : recipe.title_en,
-    slug: locale === 'fr' ? slugFr || recipe.slug_en : recipe.slug_en,
-    description:
-      locale === 'fr' ? recipe.description_fr : recipe.description_en,
-    ingredients:
-      locale === 'fr' ? recipe.ingredients_fr : recipe.ingredients_en,
-    instructions:
-      locale === 'fr' ? recipe.instructions_fr : recipe.instructions_en,
-    notes: pickNotes(locale, recipe),
-    blog: pickBlog(locale, recipe),
-    nutrition: pickNutrition(locale, recipe),
+    title: recipe.title_en,
+    slug: slugEn,
+    description: recipe.description_en,
+    ingredients: recipe.ingredients_en,
+    instructions: recipe.instructions_en,
+    notes: pickNotes(recipe),
+    blog: pickBlog(recipe),
+    nutrition: pickNutrition(recipe),
     prep_time: recipe.prep_time_minutes,
     cook_time: recipe.cook_time_minutes,
     servings: recipe.servings,
@@ -86,21 +67,21 @@ export function localizeRecipe(recipe: Recipe, locale: Locale): LocalizedRecipe 
     image_url: recipe.image_url,
     is_featured: recipe.is_featured,
     category: recipe.category
-      ? localizeCategory(recipe.category, locale)
+      ? localizeCategory(recipe.category)
       : undefined,
   };
 }
 
-export function localizeBlogPost(
-  post: BlogPost,
-  locale: Locale
-): LocalizedBlogPost {
+export function localizeBlogPost(post: BlogPost): LocalizedBlogPost {
+  const title = post.title_en?.trim() || post.title_fr;
+  const content = post.content_en?.trim() ? post.content_en : post.content_fr;
+  const excerpt = post.excerpt_en?.trim() ? post.excerpt_en : post.excerpt_fr;
   return {
     id: post.id,
-    title: locale === 'fr' ? post.title_fr : post.title_en,
+    title,
     slug: post.slug,
-    content: locale === 'fr' ? post.content_fr : post.content_en,
-    excerpt: locale === 'fr' ? post.excerpt_fr : post.excerpt_en,
+    content: content ?? null,
+    excerpt: excerpt ?? null,
     image_url: post.image_url,
     created_at: post.created_at,
   };

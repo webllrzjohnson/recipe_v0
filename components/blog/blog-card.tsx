@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Link } from '@/i18n/navigation';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import type { LocalizedBlogPost } from '@/lib/types/database';
 

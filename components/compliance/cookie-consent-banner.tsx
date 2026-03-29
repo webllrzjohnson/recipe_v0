@@ -1,14 +1,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+import Link from 'next/link';
+import { copy } from '@/lib/copy';
 import { Button } from '@/components/ui/button';
 import {
   COOKIE_CONSENT_STORAGE_KEY,
   type CookieConsentValue,
   COOKIE_CONSENT_EVENT,
 } from '@/lib/compliance/cookie-consent';
+
+const banner = copy.legal.cookieBanner;
 
 function readStored(): CookieConsentValue | null {
   if (typeof window === 'undefined') return null;
@@ -31,7 +33,6 @@ function persist(value: CookieConsentValue) {
 }
 
 export function CookieConsentBanner() {
-  const t = useTranslations('legal.cookieBanner');
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -50,16 +51,16 @@ export function CookieConsentBanner() {
       <div className="mx-auto flex max-w-4xl flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-8">
         <div className="min-w-0 space-y-1 text-sm">
           <p id="cookie-banner-title" className="font-medium text-foreground">
-            {t('title')}
+            {banner.title}
           </p>
           <p id="cookie-banner-desc" className="text-muted-foreground leading-relaxed">
-            {t('body')}{' '}
+            {banner.body}{' '}
             <Link href="/privacy" className="text-primary underline underline-offset-4 hover:no-underline">
-              {t('privacyLink')}
+              {banner.privacyLink}
             </Link>
             {' · '}
             <Link href="/cookies" className="text-primary underline underline-offset-4 hover:no-underline">
-              {t('cookiePolicyLink')}
+              {banner.cookiePolicyLink}
             </Link>
           </p>
         </div>
@@ -73,7 +74,7 @@ export function CookieConsentBanner() {
               setVisible(false);
             }}
           >
-            {t('essentialOnly')}
+            {banner.essentialOnly}
           </Button>
           <Button
             type="button"
@@ -83,7 +84,7 @@ export function CookieConsentBanner() {
               setVisible(false);
             }}
           >
-            {t('acceptAll')}
+            {banner.acceptAll}
           </Button>
         </div>
       </div>

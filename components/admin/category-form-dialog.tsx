@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { copy } from '@/lib/copy';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,17 +19,16 @@ import { Plus, Pencil, Loader2 } from 'lucide-react';
 import type { Category } from '@/lib/types/database';
 
 interface CategoryFormDialogProps {
-  locale: string;
   category?: Category;
   isEdit?: boolean;
 }
 
+const admin = copy.admin;
+
 export function CategoryFormDialog({
-  locale,
   category,
   isEdit,
 }: CategoryFormDialogProps) {
-  const t = useTranslations('admin');
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -71,7 +70,8 @@ export function CategoryFormDialog({
     const categoryData = {
       name_en: nameEn,
       name_fr: nameFr,
-      slug,
+      slug_en: slugEn,
+      slug_fr: slugFr.trim() || null,
       description_en: descriptionEn || null,
       description_fr: descriptionFr || null,
       image_url: imageUrl || null,
@@ -111,20 +111,14 @@ export function CategoryFormDialog({
         ) : (
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            {t('addNew')}
+            {admin.addNew}
           </Button>
         )}
       </DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="font-serif">
-            {isEdit
-              ? locale === 'fr'
-                ? 'Modifier la Catégorie'
-                : 'Edit Category'
-              : locale === 'fr'
-                ? 'Nouvelle Catégorie'
-                : 'New Category'}
+            {isEdit ? admin.editCategoryTitle : admin.newCategoryTitle}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -209,13 +203,13 @@ export function CategoryFormDialog({
               variant="outline"
               onClick={() => setOpen(false)}
             >
-              {t('cancel')}
+              {admin.cancel}
             </Button>
             <Button type="submit" disabled={loading}>
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                t('save')
+                admin.save
               )}
             </Button>
           </div>

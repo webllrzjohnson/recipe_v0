@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { copy } from '@/lib/copy';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -11,46 +11,55 @@ import {
   UtensilsCrossed,
   FolderOpen,
   LogOut,
+  Megaphone,
+  Home,
+  FileText,
 } from 'lucide-react';
 import Link from 'next/link';
 
-interface AdminSidebarProps {
-  locale: string;
-}
+const admin = copy.admin;
 
-export function AdminSidebar({ locale }: AdminSidebarProps) {
-  const t = useTranslations('admin');
+export function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
 
   const navItems = [
     {
-      href: `/${locale}/admin`,
-      label: t('dashboard'),
+      href: '/admin',
+      label: admin.dashboard,
       icon: LayoutDashboard,
     },
     {
-      href: `/${locale}/admin/recipes`,
-      label: t('recipes'),
+      href: '/admin/pages',
+      label: admin.sitePages,
+      icon: FileText,
+    },
+    {
+      href: '/admin/recipes',
+      label: admin.recipes,
       icon: UtensilsCrossed,
     },
     {
-      href: `/${locale}/admin/categories`,
-      label: t('categories'),
+      href: '/admin/categories',
+      label: admin.categories,
       icon: FolderOpen,
+    },
+    {
+      href: '/admin/ads',
+      label: admin.ads.nav,
+      icon: Megaphone,
     },
   ];
 
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push(`/${locale}/admin/login`);
+    router.push('/admin/login');
     router.refresh();
   };
 
   return (
     <aside className="flex w-64 flex-col border-r border-border bg-sidebar">
-      {/* Logo */}
       <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-6">
         <ChefHat className="h-6 w-6 text-sidebar-primary" />
         <span className="font-serif text-lg font-bold text-sidebar-foreground">
@@ -58,10 +67,26 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
         </span>
       </div>
 
-      {/* Navigation */}
+      <div className="border-b border-sidebar-border p-4">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full justify-start gap-2 border-sidebar-border text-sidebar-foreground"
+          asChild
+        >
+          <Link href="/">
+            <Home className="h-4 w-4 shrink-0" />
+            {admin.goHome}
+          </Link>
+        </Button>
+      </div>
+
       <nav className="flex-1 space-y-1 p-4">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const dashboardHref = '/admin';
+          const isActive =
+            pathname === item.href ||
+            (item.href !== dashboardHref && !!pathname?.startsWith(`${item.href}/`));
           return (
             <Link
               key={item.href}
@@ -80,7 +105,6 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
         })}
       </nav>
 
-      {/* Sign Out */}
       <div className="border-t border-sidebar-border p-4">
         <Button
           variant="ghost"
@@ -88,7 +112,7 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
           onClick={handleSignOut}
         >
           <LogOut className="h-4 w-4" />
-          {t('signOut')}
+          {admin.signOut}
         </Button>
       </div>
     </aside>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { copy } from '@/lib/copy';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,8 +22,9 @@ interface DeleteCategoryButtonProps {
   categoryId: string;
 }
 
+const admin = copy.admin;
+
 export function DeleteCategoryButton({ categoryId }: DeleteCategoryButtonProps) {
-  const t = useTranslations('admin');
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -52,13 +53,13 @@ export function DeleteCategoryButton({ categoryId }: DeleteCategoryButtonProps) 
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('delete')}</AlertDialogTitle>
+          <AlertDialogTitle>{admin.delete}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t('confirmDelete')}
+            {admin.confirmDelete}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+          <AlertDialogCancel>{admin.cancel}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={loading}
@@ -67,7 +68,7 @@ export function DeleteCategoryButton({ categoryId }: DeleteCategoryButtonProps) 
             {loading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              t('delete')
+              admin.delete
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

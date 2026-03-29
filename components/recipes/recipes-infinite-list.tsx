@@ -1,13 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { copy } from '@/lib/copy';
+import { formatRecipeCountShowing } from '@/lib/format-copy';
 import { RecipeCard } from '@/components/recipes/recipe-card';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { RECIPES_PAGE_SIZE } from '@/lib/recipes/published-recipes-query';
 import type { LocalizedRecipe } from '@/lib/types/database';
-import type { Locale } from '@/i18n/config';
+
+const common = copy.common;
 
 type ApiPayload = {
   recipes: LocalizedRecipe[];
@@ -17,19 +19,16 @@ type ApiPayload = {
 };
 
 export function RecipesInfiniteList({
-  locale,
   initialRecipes,
   initialHasMore,
   searchQuery,
   totalCount,
 }: {
-  locale: Locale;
   initialRecipes: LocalizedRecipe[];
   initialHasMore: boolean;
   searchQuery: string;
   totalCount: number;
 }) {
-  const t = useTranslations('common');
   const [recipes, setRecipes] = useState<LocalizedRecipe[]>(initialRecipes);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(initialHasMore);
@@ -52,7 +51,6 @@ export function RecipesInfiniteList({
     const params = new URLSearchParams({
       page: String(nextPage),
       limit: String(RECIPES_PAGE_SIZE),
-      locale,
     });
     if (searchQuery.trim()) {
       params.set('q', searchQuery.trim());
@@ -62,7 +60,7 @@ export function RecipesInfiniteList({
       const res = await fetch(`/api/recipes?${params.toString()}`);
       if (!res.ok) {
         const body = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(body.error || t('error'));
+        throw new Error(body.error || common.error);
       }
       const body = (await res.json()) as ApiPayload;
       setRecipes((prev) => {
@@ -79,11 +77,11 @@ export function RecipesInfiniteList({
       setPage(nextPage);
       setHasMore(body.hasMore);
     } catch (e) {
-      setLoadError(e instanceof Error ? e.message : t('error'));
+      setLoadError(e instanceof Error ? e.message : common.error);
     } finally {
       setLoading(false);
     }
-  }, [hasMore, loading, page, searchQuery, locale, t]);
+  }, [hasMore, loading, page, searchQuery]);
 
   useEffect(() => {
     const el = sentinelRef.current;
@@ -106,7 +104,7 @@ export function RecipesInfiniteList({
   if (recipes.length === 0) {
     return (
       <div className="py-12 text-center">
-        <p className="text-muted-foreground">{t('noResults')}</p>
+        <p className="text-muted-foreground">{common.noResults}</p>
       </div>
     );
   }
@@ -115,7 +113,7 @@ export function RecipesInfiniteList({
     <div className="space-y-8">
       {totalCount > 0 ? (
         <p className="text-sm text-muted-foreground">
-          {t('recipeCountShowing', { count: totalCount })}
+          {formatRecipeCountShowing(totalCount)}
         </p>
       ) : null}
 
@@ -135,7 +133,7 @@ export function RecipesInfiniteList({
         <div className="flex flex-col items-center gap-3 text-center">
           <p className="text-sm text-destructive">{loadError}</p>
           <Button type="button" variant="outline" size="sm" onClick={() => void loadNext()}>
-            {t('retry')}
+            {common.retry}
           </Button>
         </div>
       ) : null}
@@ -149,7 +147,7 @@ export function RecipesInfiniteList({
       {hasMore && !loading && !loadError ? (
         <div className="flex justify-center">
           <Button type="button" variant="outline" onClick={() => void loadNext()}>
-            {t('loadMore')}
+            {common.loadMore}
           </Button>
         </div>
       ) : null}

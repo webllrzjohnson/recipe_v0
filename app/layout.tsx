@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Libre_Baskerville, Raleway } from 'next/font/google';
 import { ConsentAwareAnalytics } from '@/components/compliance/consent-aware-analytics';
+import { CookieConsentBanner } from '@/components/compliance/cookie-consent-banner';
 import { getMetadataBase } from '@/lib/seo/site-url';
 import './globals.css';
 
@@ -62,11 +63,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${libreBaskerville.variable} ${raleway.variable} font-sans antialiased`}
       >
         {children}
+        <CookieConsentBanner />
         <ConsentAwareAnalytics />
       </body>
     </html>

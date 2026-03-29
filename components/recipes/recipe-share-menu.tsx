@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { copy } from '@/lib/copy';
 import { ChevronDown, Link2, Share2 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -38,7 +38,7 @@ export function RecipeShareMenu({
   description,
   className,
 }: RecipeShareMenuProps) {
-  const t = useTranslations('recipe');
+  const rc = copy.recipe;
   const [copied, cycleCopied] = useState(false);
   const [nativeShare, setNativeShare] = useState(false);
 
@@ -63,10 +63,10 @@ export function RecipeShareMenu({
         <DropdownMenuTrigger
           type="button"
           className={triggerClass}
-          aria-label={t('shareRecipeAria')}
+          aria-label={rc.shareRecipeAria}
         >
           <Share2 className="size-4 shrink-0 opacity-80" aria-hidden />
-          {t('shareRecipe')}
+          {rc.shareRecipe}
           <ChevronDown className="size-3.5 shrink-0 opacity-70" aria-hidden />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="center" className="min-w-[12rem]">
@@ -81,7 +81,7 @@ export function RecipeShareMenu({
                   }).catch(() => {});
                 }}
               >
-                {t('shareNative')}
+                {rc.shareNative}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </>
@@ -99,11 +99,11 @@ export function RecipeShareMenu({
             }}
           >
             <Link2 className="size-4" aria-hidden />
-            {copied ? t('linkCopied') : t('copyLink')}
+            {copied ? rc.linkCopied : rc.copyLink}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="text-muted-foreground text-xs font-normal">
-            {t('shareOnSocial')}
+            {rc.shareOnSocial}
           </DropdownMenuLabel>
           <DropdownMenuItem asChild>
             <a
@@ -111,12 +111,12 @@ export function RecipeShareMenu({
               target="_blank"
               rel="noopener noreferrer"
             >
-              {t('shareFacebook')}
+              {rc.shareFacebook}
             </a>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <a href={social.x} target="_blank" rel="noopener noreferrer">
-              {t('shareX')}
+              {rc.shareX}
             </a>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
@@ -125,7 +125,7 @@ export function RecipeShareMenu({
               target="_blank"
               rel="noopener noreferrer"
             >
-              {t('sharePinterest')}
+              {rc.sharePinterest}
             </a>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
@@ -134,7 +134,7 @@ export function RecipeShareMenu({
               target="_blank"
               rel="noopener noreferrer"
             >
-              {t('shareLinkedIn')}
+              {rc.shareLinkedIn}
             </a>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
@@ -143,7 +143,7 @@ export function RecipeShareMenu({
               target="_blank"
               rel="noopener noreferrer"
             >
-              {t('shareWhatsApp')}
+              {rc.shareWhatsApp}
             </a>
           </DropdownMenuItem>
         </DropdownMenuContent>

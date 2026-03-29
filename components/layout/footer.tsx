@@ -1,23 +1,26 @@
-import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
+'use client';
+
+import Link from 'next/link';
+import { copy } from '@/lib/copy';
 import { ChefHat, Facebook, Instagram, Youtube } from 'lucide-react';
 
-export function Footer() {
-  const t = useTranslations();
+const common = copy.common;
+const footer = copy.footer;
 
+export function Footer() {
   const quickLinks = [
-    { href: '/', label: t('common.home') },
-    { href: '/recipes', label: t('common.recipes') },
-    { href: '/categories', label: t('common.categories') },
-    { href: '/blog', label: t('common.blog') },
-    { href: '/about', label: t('common.about') },
+    { href: '/', label: common.home },
+    { href: '/recipes', label: common.recipes },
+    { href: '/categories', label: common.categories },
+    { href: '/blog', label: common.blog },
+    { href: '/about', label: common.about },
   ];
 
   const legalLinks = [
-    { href: '/privacy', label: t('footer.privacyPolicy') },
-    { href: '/terms', label: t('footer.termsOfUse') },
-    { href: '/disclaimer', label: t('footer.disclaimer') },
-    { href: '/cookies', label: t('footer.cookiePolicy') },
+    { href: '/privacy', label: footer.privacyPolicy },
+    { href: '/terms', label: footer.termsOfUse },
+    { href: '/disclaimer', label: footer.disclaimer },
+    { href: '/cookies', label: footer.cookiePolicy },
   ];
 
   const socialLinks = [
@@ -30,23 +33,19 @@ export function Footer() {
     <footer className="border-t border-border bg-secondary/30">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-3">
-          {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <ChefHat className="h-8 w-8 text-primary" />
               <span className="font-serif text-xl font-bold text-foreground">
-                {t('common.siteName')}
+                {common.siteName}
               </span>
             </div>
-            <p className="text-sm text-muted-foreground">
-              {t('footer.description')}
-            </p>
+            <p className="text-sm text-muted-foreground">{footer.description}</p>
           </div>
 
-          {/* Quick Links */}
           <div>
             <h3 className="mb-4 font-serif text-lg font-semibold text-foreground">
-              {t('footer.quickLinks')}
+              {footer.quickLinks}
             </h3>
             <nav className="flex flex-col gap-2">
               {quickLinks.map((link) => (
@@ -61,10 +60,9 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Legal */}
           <div>
             <h3 className="mb-4 font-serif text-lg font-semibold text-foreground">
-              {t('footer.legalHeading')}
+              {footer.legalHeading}
             </h3>
             <nav className="flex flex-col gap-2">
               {legalLinks.map((link) => (
@@ -79,10 +77,9 @@ export function Footer() {
             </nav>
           </div>
 
-          {/* Social */}
           <div>
             <h3 className="mb-4 font-serif text-lg font-semibold text-foreground">
-              {t('footer.followUs')}
+              {footer.followUs}
             </h3>
             <div className="flex gap-4">
               {socialLinks.map((social) => (
@@ -99,11 +96,9 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
         <div className="mt-8 border-t border-border pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} {t('common.siteName')}.{' '}
-            {t('footer.copyright')}
+            &copy; {new Date().getFullYear()} {common.siteName}. {footer.copyright}
           </p>
         </div>
       </div>

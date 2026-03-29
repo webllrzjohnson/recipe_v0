@@ -1,5 +1,6 @@
 -- Sarap Kitchen — full DDL for a new database (Supabase / Postgres).
 -- Apply in order: schema.sql → rls.sql → seed.sql (optional).
+-- Upgrading an older database missing tables below: scripts/legacy_schema_patches.sql (after rls.sql).
 -- Then run bootstrap_admin.sql once per admin user (see file header).
 
 -- Categories
@@ -89,3 +90,25 @@ CREATE INDEX idx_recipes_slug_fr ON recipes(slug_fr) WHERE slug_fr IS NOT NULL;
 CREATE INDEX idx_categories_slug_en ON categories(slug_en);
 CREATE INDEX idx_categories_slug_fr ON categories(slug_fr) WHERE slug_fr IS NOT NULL;
 CREATE INDEX idx_blog_posts_slug ON blog_posts(slug);
+
+-- Site-wide settings (singleton row id = 1). Public read; admins manage via RLS.
+CREATE TABLE site_settings (
+  id SMALLINT PRIMARY KEY CHECK (id = 1),
+  ads_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+  adsense_publisher_id TEXT,
+  adsense_placements JSONB NOT NULL DEFAULT '{}'::jsonb,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+INSERT INTO site_settings (id, ads_enabled, adsense_publisher_id, adsense_placements)
+VALUES (1, FALSE, NULL, '{}'::jsonb)
+ON CONFLICT (id) DO NOTHING;
+
+-- Editable static pages (home, about, legal, etc.). Public read; admins manage via RLS.
+CREATE TABLE static_pages (
+  page_slug TEXT NOT NULL,
+  locale TEXT NOT NULL CHECK (locale IN ('en')),
+  content JSONB NOT NULL DEFAULT '{}'::jsonb,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  PRIMARY KEY (page_slug, locale)
+);

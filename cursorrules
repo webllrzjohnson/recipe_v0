@@ -23,7 +23,7 @@
 - Dates:            date-fns only
 - Email:            Resend only
 - Payments:         Stripe only
-- i18n:             next-intl only
+- i18n:             English-only; copy in `messages/en.json` via `@/lib/copy` (no route locales)
 - URL State:        nuqs only
 - Analytics:        Vercel Analytics + PostHog
 - Error Tracking:   Sentry
@@ -260,12 +260,11 @@
 - Always respect prefers-reduced-motion via framer-motion's useReducedMotion hook
 
 # ─────────────────────────────────────────
-# 23. INTERNATIONALISATION (i18n)
+# 23. COPY & LANGUAGE
 # ─────────────────────────────────────────
-- Use next-intl for all i18n — French is required (Canadian legal requirement)
-- Never hardcode user-facing strings — always use translation keys
-- RTL layout support via Tailwind rtl: variant for Arabic/Urdu if needed
-- Always set the lang attribute on <html> dynamically based on locale
+- Site is English-only; public URLs have no `/en` or `/fr` prefix
+- User-facing strings live in `messages/en.json` and are imported through `@/lib/copy`
+- `<html lang="en">` in the root layout
 
 # ─────────────────────────────────────────
 # 24. ANALYTICS & MONITORING

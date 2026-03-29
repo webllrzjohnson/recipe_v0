@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { copy } from '@/lib/copy';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,6 +21,8 @@ import { Loader2, Plus, X } from 'lucide-react';
 import { RecipeRichTextEditor } from '@/components/admin/recipe-rich-text-editor';
 import type { Category, Recipe } from '@/lib/types/database';
 
+const admin = copy.admin;
+
 function normalizeBlogHtml(html: string): string | null {
   const t = html.trim();
   if (!t) return null;
@@ -36,13 +38,11 @@ function coalesceStringArrayField(value: unknown): string[] {
 }
 
 interface RecipeFormProps {
-  locale: string;
   categories: Category[];
   recipe?: Recipe;
 }
 
-export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
-  const t = useTranslations('admin');
+export function RecipeForm({ categories, recipe }: RecipeFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -177,7 +177,7 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
     }
 
     if (!error) {
-      router.push(`/${locale}/admin/recipes`);
+      router.push('/admin/recipes');
       router.refresh();
     } else {
       console.error('Error saving recipe:', error);
@@ -191,9 +191,7 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
       {/* Basic Info */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">
-            {locale === 'fr' ? 'Informations de Base' : 'Basic Information'}
-          </CardTitle>
+          <CardTitle className="font-serif">Basic information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -236,7 +234,7 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
               value={slugFr}
               onChange={(e) => setSlugFr(e.target.value)}
               onBlur={generateSlugFr}
-              placeholder="optional — falls back to English slug in /fr/…"
+              placeholder="Optional alternate slug (not used on the public English site)"
             />
           </div>
 
@@ -276,13 +274,9 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
       {/* Story / blog (above recipe card on public page) */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">
-            {locale === 'fr' ? 'Article (au-dessus de la fiche)' : 'Story (above recipe card)'}
-          </CardTitle>
+          <CardTitle className="font-serif">Story (above recipe card)</CardTitle>
           <p className="text-sm text-muted-foreground">
-            {locale === 'fr'
-              ? 'Texte riche avec images (URL) et vidéos YouTube. Affiché sous le titre sur la page recette.'
-              : 'Rich text with images (paste URL) and YouTube embeds. Shown under the title on the recipe page.'}
+            Rich text with images (paste URL) and YouTube embeds. Shown under the title on the recipe page.
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -312,9 +306,7 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
       {/* Recipe Details */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">
-            {locale === 'fr' ? 'Détails de la Recette' : 'Recipe Details'}
-          </CardTitle>
+          <CardTitle className="font-serif">Recipe details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-4">
@@ -369,7 +361,7 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
               <SelectContent>
                 {categories.map((cat) => (
                   <SelectItem key={cat.id} value={cat.id}>
-                    {locale === 'fr' ? cat.name_fr : cat.name_en}
+                    {cat.name_en}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -381,9 +373,7 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
       {/* Ingredients */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">
-            {locale === 'fr' ? 'Ingrédients' : 'Ingredients'}
-          </CardTitle>
+          <CardTitle className="font-serif">Ingredients</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -559,9 +549,7 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
       {/* Notes & nutrition */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">
-            {locale === 'fr' ? 'Notes et nutrition' : 'Notes & nutrition'}
-          </CardTitle>
+          <CardTitle className="font-serif">Notes & nutrition</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="grid gap-4 sm:grid-cols-2">
@@ -675,19 +663,13 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
       {/* Publishing Options */}
       <Card>
         <CardHeader>
-          <CardTitle className="font-serif">
-            {locale === 'fr' ? 'Options de Publication' : 'Publishing Options'}
-          </CardTitle>
+          <CardTitle className="font-serif">Publishing options</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="featured">{t('featured')}</Label>
-              <p className="text-sm text-muted-foreground">
-                {locale === 'fr'
-                  ? 'Afficher sur la page d\'accueil'
-                  : 'Display on homepage'}
-              </p>
+              <Label htmlFor="featured">{admin.featured}</Label>
+              <p className="text-sm text-muted-foreground">Display on homepage</p>
             </div>
             <Switch
               id="featured"
@@ -697,12 +679,8 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="published">{t('published')}</Label>
-              <p className="text-sm text-muted-foreground">
-                {locale === 'fr'
-                  ? 'Rendre visible au public'
-                  : 'Make visible to public'}
-              </p>
+              <Label htmlFor="published">{admin.published}</Label>
+              <p className="text-sm text-muted-foreground">Make visible to public</p>
             </div>
             <Switch
               id="published"
@@ -718,18 +696,18 @@ export function RecipeForm({ locale, categories, recipe }: RecipeFormProps) {
         <Button
           type="button"
           variant="outline"
-          onClick={() => router.push(`/${locale}/admin/recipes`)}
+          onClick={() => router.push('/admin/recipes')}
         >
-          {t('cancel')}
+          {admin.cancel}
         </Button>
         <Button type="submit" disabled={loading}>
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {locale === 'fr' ? 'Enregistrement...' : 'Saving...'}
+              Saving…
             </>
           ) : (
-            t('save')
+            admin.save
           )}
         </Button>
       </div>

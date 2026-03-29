@@ -5,7 +5,6 @@ import {
   RECIPES_PAGE_SIZE,
 } from '@/lib/recipes/published-recipes-query';
 import { localizeRecipe } from '@/lib/utils/localize';
-import { locales, type Locale } from '@/i18n/config';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -15,10 +14,6 @@ export async function GET(request: NextRequest) {
     Math.max(1, parseInt(searchParams.get('limit') || String(RECIPES_PAGE_SIZE), 10) || RECIPES_PAGE_SIZE)
   );
   const q = (searchParams.get('q') || '').trim();
-  const localeRaw = searchParams.get('locale') || 'en';
-  const locale: Locale = locales.includes(localeRaw as Locale)
-    ? (localeRaw as Locale)
-    : 'en';
 
   try {
     const supabase = createAnonServerClient();
@@ -35,9 +30,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const recipes = (result.data ?? []).map((row) =>
-      localizeRecipe(row, locale)
-    );
+    const recipes = (result.data ?? []).map((row) => localizeRecipe(row));
 
     return NextResponse.json({
       recipes,

@@ -1,5 +1,5 @@
 /**
- * Canonical site origin for metadata, hreflang, and JSON-LD.
+ * Canonical site origin for metadata and JSON-LD.
  * Set NEXT_PUBLIC_SITE_URL in production (e.g. https://example.com).
  */
 export function getSiteOrigin(): string | undefined {

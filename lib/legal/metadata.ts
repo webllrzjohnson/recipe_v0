@@ -1,7 +1,8 @@
-import { getTranslations } from 'next-intl/server';
+import { copy } from '@/lib/copy';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
-import { getLegalPage, type LegalPageSlug } from '@/lib/legal';
-import type { Locale } from '@/i18n/config';
+import type { LegalPageSlug } from '@/lib/legal';
+import { createAnonServerClient } from '@/lib/supabase/anon-server';
+import { resolveLegalPageContentOnly } from '@/lib/static-pages/resolve';
 
 const PATH_BY_SLUG: Record<LegalPageSlug, string> = {
   privacy: '/privacy',
@@ -10,18 +11,14 @@ const PATH_BY_SLUG: Record<LegalPageSlug, string> = {
   cookies: '/cookies',
 };
 
-export async function buildLegalMetadata(
-  locale: string,
-  slug: LegalPageSlug
-) {
-  const content = getLegalPage(slug, locale as Locale);
-  const tCommon = await getTranslations({ locale, namespace: 'common' });
+export async function buildLegalMetadata(slug: LegalPageSlug) {
+  const supabase = createAnonServerClient();
+  const content = await resolveLegalPageContentOnly(supabase, slug);
 
   return buildPageMetadata({
-    locale,
     pathname: PATH_BY_SLUG[slug],
     title: content.title,
     description: content.description,
-    siteName: tCommon('siteName'),
+    siteName: copy.common.siteName,
   });
 }

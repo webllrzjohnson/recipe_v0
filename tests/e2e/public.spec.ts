@@ -1,13 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('public pages (no auth)', () => {
-  test('about page responds in English and French', async ({ page }) => {
-    const en = await page.goto('/en/about');
-    expect(en?.ok()).toBeTruthy();
-    await expect(page.locator('h1')).toBeVisible();
-
-    const fr = await page.goto('/fr/about');
-    expect(fr?.ok()).toBeTruthy();
+  test('about page responds', async ({ page }) => {
+    const res = await page.goto('/about');
+    expect(res?.ok()).toBeTruthy();
     await expect(page.locator('h1')).toBeVisible();
   });
 
@@ -19,7 +15,7 @@ test.describe('public pages (no auth)', () => {
   });
 
   test('legal compliance pages return OK', async ({ page }) => {
-    for (const path of ['/en/privacy', '/en/terms', '/en/disclaimer', '/en/cookies']) {
+    for (const path of ['/privacy', '/terms', '/disclaimer', '/cookies']) {
       const res = await page.goto(path);
       expect(res?.ok(), path).toBeTruthy();
       await expect(page.locator('h1')).toBeVisible();
@@ -27,14 +23,14 @@ test.describe('public pages (no auth)', () => {
   });
 
   test('home, recipes, and blog return OK', async ({ page }) => {
-    let res = await page.goto('/en');
-    expect(res?.ok(), 'GET /en — set NEXT_PUBLIC_SUPABASE_* if this fails').toBeTruthy();
+    let res = await page.goto('/');
+    expect(res?.ok(), 'GET / — set NEXT_PUBLIC_SUPABASE_* if this fails').toBeTruthy();
 
-    res = await page.goto('/en/recipes');
+    res = await page.goto('/recipes');
     expect(res?.ok()).toBeTruthy();
     await expect(page.locator('h1')).toBeVisible();
 
-    res = await page.goto('/en/blog');
+    res = await page.goto('/blog');
     expect(res?.ok()).toBeTruthy();
     await expect(page.locator('h1')).toBeVisible();
   });
