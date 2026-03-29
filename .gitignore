@@ -11,6 +11,10 @@ next.user-config.*
 .env
 .env*.local
 
+# Local Supabase account notes (never commit secrets)
+@Recipe supabase account - webllrzjohnson.txt
+Recipe supabase account - webllrzjohnson.txt
+
 # Common ignores
 node_modules
 .next/
