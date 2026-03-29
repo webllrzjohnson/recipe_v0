@@ -1,4 +1,8 @@
--- Categories table
+-- Sarap Kitchen — full DDL for a new database (Supabase / Postgres).
+-- Apply in order: schema.sql → rls.sql → seed.sql (optional).
+-- Then run bootstrap_admin.sql once per admin user (see file header).
+
+-- Categories
 CREATE TABLE categories (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug_en TEXT NOT NULL,
@@ -12,7 +16,7 @@ CREATE TABLE categories (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Recipes table
+-- Recipes
 CREATE TABLE recipes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug_en TEXT NOT NULL,
@@ -21,6 +25,8 @@ CREATE TABLE recipes (
   title_fr TEXT NOT NULL,
   description_en TEXT,
   description_fr TEXT,
+  blog_en TEXT,
+  blog_fr TEXT,
   ingredients_en JSONB NOT NULL DEFAULT '[]',
   ingredients_fr JSONB NOT NULL DEFAULT '[]',
   instructions_en JSONB NOT NULL DEFAULT '[]',
@@ -42,7 +48,7 @@ CREATE TABLE recipes (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Blog posts table
+-- Blog posts
 CREATE TABLE blog_posts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug TEXT UNIQUE NOT NULL,
@@ -59,7 +65,7 @@ CREATE TABLE blog_posts (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Admin users (profiles linked to auth.users)
+-- Admin profiles (auth.users FK)
 CREATE TABLE admin_profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
@@ -68,7 +74,7 @@ CREATE TABLE admin_profiles (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Indexes for performance
+-- Indexes
 CREATE INDEX idx_recipes_category ON recipes(category_id);
 CREATE INDEX idx_recipes_featured ON recipes(is_featured) WHERE is_featured = TRUE;
 CREATE INDEX idx_recipes_published ON recipes(is_published) WHERE is_published = TRUE;

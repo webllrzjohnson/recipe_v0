@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAnonServerClient } from '@/lib/supabase/anon-server';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { BlogCard } from '@/components/blog/blog-card';
@@ -36,7 +36,7 @@ export default async function BlogIndexPage({
   const t = await getTranslations({ locale, namespace: 'blogPage' });
   const tCommon = await getTranslations({ locale, namespace: 'common' });
 
-  const supabase = await createClient();
+  const supabase = createAnonServerClient();
 
   const { data: rows, error } = await supabase
     .from('blog_posts')
@@ -68,8 +68,8 @@ export default async function BlogIndexPage({
 
             {posts.length > 0 ? (
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                {posts.map((post) => (
-                  <BlogCard key={post.id} post={post} />
+                {posts.map((post, index) => (
+                  <BlogCard key={post.id} post={post} priority={index < 3} />
                 ))}
               </div>
             ) : (

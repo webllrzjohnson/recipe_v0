@@ -1,7 +1,11 @@
--- Fix: "infinite recursion detected in policy for relation admin_profiles"
--- Run once in Supabase SQL Editor if you already applied an older 002_rls_policies.sql.
--- Safe to run multiple times.
+-- Row level security and policies (run after schema.sql).
 
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE recipes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE blog_posts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE admin_profiles ENABLE ROW LEVEL SECURITY;
+
+-- Read admin flag without recursive admin_profiles policies
 CREATE OR REPLACE FUNCTION public.auth_is_admin()
 RETURNS boolean
 LANGUAGE sql

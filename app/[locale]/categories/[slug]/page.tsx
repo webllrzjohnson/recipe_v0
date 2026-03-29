@@ -1,6 +1,10 @@
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAnonServerClient } from '@/lib/supabase/anon-server';
+import {
+  fetchCategoryByUrlSlug,
+  normalizeUrlSlug,
+} from '@/lib/supabase/fetch-by-url-slug';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { RecipeCard } from '@/components/recipes/recipe-card';
@@ -11,15 +15,15 @@ import type { Locale } from '@/i18n/config';
 import type { Category, Recipe } from '@/lib/types/database';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
 import { categoryAlternatePathnames } from '@/lib/seo/entity-paths';
-import { fetchCategoryByUrlSlug } from '@/lib/supabase/fetch-by-url-slug';
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale, slug } = await params;
-  const supabase = await createClient();
+  const { locale, slug: rawSlug } = await params;
+  const slug = normalizeUrlSlug(rawSlug);
+  const supabase = createAnonServerClient();
   const tCommon = await getTranslations({ locale, namespace: 'common' });
   const tSeo = await getTranslations({ locale, namespace: 'seo' });
 
@@ -66,12 +70,13 @@ export default async function CategoryDetailPage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale, slug } = await params;
+  const { locale, slug: rawSlug } = await params;
+  const slug = normalizeUrlSlug(rawSlug);
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'category' });
   const tCommon = await getTranslations({ locale, namespace: 'common' });
 
-  const supabase = await createClient();
+  const supabase = createAnonServerClient();
 
   const { data: categoryData, error: catErr } = await fetchCategoryByUrlSlug(
     supabase,
@@ -135,8 +140,12 @@ export default async function CategoryDetailPage({
             {/* Recipe Grid */}
             {recipes.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {recipes.map((recipe) => (
-                  <RecipeCard key={recipe.id} recipe={recipe} />
+                {recipes.map((recipe, index) => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    priority={index < 3}
+                  />
                 ))}
               </div>
             ) : (

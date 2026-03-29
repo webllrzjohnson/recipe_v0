@@ -26,8 +26,12 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
 
         {/* Category Grid */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+          {categories.map((category, index) => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              priority={index < 4}
+            />
           ))}
         </div>
       </div>

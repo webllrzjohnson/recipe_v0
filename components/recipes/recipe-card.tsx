@@ -8,9 +8,11 @@ import type { LocalizedRecipe } from '@/lib/types/database';
 
 interface RecipeCardProps {
   recipe: LocalizedRecipe;
+  /** First visible cards on listing pages — improves LCP (implies eager load). */
+  priority?: boolean;
 }
 
-export function RecipeCard({ recipe }: RecipeCardProps) {
+export function RecipeCard({ recipe, priority = false }: RecipeCardProps) {
   const t = useTranslations('recipe');
 
   const totalTime =
@@ -31,6 +33,8 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
+            priority={priority}
+            loading={priority ? 'eager' : undefined}
           />
           {recipe.is_featured && (
             <Badge className="absolute left-3 top-3 bg-accent text-accent-foreground">

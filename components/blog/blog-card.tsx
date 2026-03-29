@@ -3,7 +3,13 @@ import { Link } from '@/i18n/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import type { LocalizedBlogPost } from '@/lib/types/database';
 
-export function BlogCard({ post }: { post: LocalizedBlogPost }) {
+export function BlogCard({
+  post,
+  priority = false,
+}: {
+  post: LocalizedBlogPost;
+  priority?: boolean;
+}) {
   return (
     <Link href={`/blog/${post.slug}`} prefetch className="block">
       <Card className="group h-full overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg">
@@ -17,6 +23,8 @@ export function BlogCard({ post }: { post: LocalizedBlogPost }) {
             fill
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
+            priority={priority}
+            loading={priority ? 'eager' : undefined}
           />
         </div>
         <CardContent className="p-4">

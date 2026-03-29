@@ -6,9 +6,15 @@ import type { LocalizedCategory } from '@/lib/types/database';
 interface CategoryCardProps {
   category: LocalizedCategory;
   recipeCount?: number;
+  /** First tiles on grids — improves LCP. */
+  priority?: boolean;
 }
 
-export function CategoryCard({ category, recipeCount }: CategoryCardProps) {
+export function CategoryCard({
+  category,
+  recipeCount,
+  priority = false,
+}: CategoryCardProps) {
   return (
     <Link href={`/categories/${category.slug}`} prefetch>
       <Card className="group relative h-48 overflow-hidden">
@@ -17,7 +23,10 @@ export function CategoryCard({ category, recipeCount }: CategoryCardProps) {
           src={category.image_url || 'https://placehold.co/800x600/C0392B/FFFFFF?text=Category'}
           alt={category.name}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover transition-transform duration-300 group-hover:scale-110"
+          priority={priority}
+          loading={priority ? 'eager' : undefined}
         />
 
         {/* Overlay */}

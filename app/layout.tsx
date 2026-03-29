@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Libre_Baskerville, Raleway } from 'next/font/google';
-import { Analytics } from '@vercel/analytics/next';
+import { ConsentAwareAnalytics } from '@/components/compliance/consent-aware-analytics';
 import { getMetadataBase } from '@/lib/seo/site-url';
 import './globals.css';
 
@@ -67,7 +67,7 @@ export default function RootLayout({
         className={`${libreBaskerville.variable} ${raleway.variable} font-sans antialiased`}
       >
         {children}
-        <Analytics />
+        <ConsentAwareAnalytics />
       </body>
     </html>
   );

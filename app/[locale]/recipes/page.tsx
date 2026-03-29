@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAnonServerClient } from '@/lib/supabase/anon-server';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { RecipesInfiniteList } from '@/components/recipes/recipes-infinite-list';
@@ -53,7 +53,7 @@ export default async function RecipesPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'common' });
 
-  const supabase = await createClient();
+  const supabase = createAnonServerClient();
 
   const { data, error, count, hasMore } = await fetchPublishedRecipesPage(
     supabase,

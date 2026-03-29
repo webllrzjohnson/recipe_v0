@@ -1,5 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAnonServerClient } from '@/lib/supabase/anon-server';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { CategoryCard } from '@/components/categories/category-card';
@@ -36,7 +36,7 @@ export default async function CategoriesPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'category' });
 
-  const supabase = await createClient();
+  const supabase = createAnonServerClient();
 
   // Fetch categories with recipe counts
   const { data: categoriesData } = await supabase
@@ -80,11 +80,12 @@ export default async function CategoriesPage({
 
             {/* Categories Grid */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {categories.map((category) => (
+              {categories.map((category, index) => (
                 <CategoryCard
                   key={category.id}
                   category={category}
                   recipeCount={category.recipeCount}
+                  priority={index < 4}
                 />
               ))}
             </div>

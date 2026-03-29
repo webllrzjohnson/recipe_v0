@@ -120,8 +120,12 @@ export function RecipesInfiniteList({
       ) : null}
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {recipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
+        {recipes.map((recipe, index) => (
+          <RecipeCard
+            key={recipe.id}
+            recipe={recipe}
+            priority={index < 3}
+          />
         ))}
       </div>
 

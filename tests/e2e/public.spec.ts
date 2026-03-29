@@ -18,6 +18,14 @@ test.describe('public pages (no auth)', () => {
     expect(text.toLowerCase()).toContain('sitemap');
   });
 
+  test('legal compliance pages return OK', async ({ page }) => {
+    for (const path of ['/en/privacy', '/en/terms', '/en/disclaimer', '/en/cookies']) {
+      const res = await page.goto(path);
+      expect(res?.ok(), path).toBeTruthy();
+      await expect(page.locator('h1')).toBeVisible();
+    }
+  });
+
   test('home, recipes, and blog return OK', async ({ page }) => {
     let res = await page.goto('/en');
     expect(res?.ok(), 'GET /en — set NEXT_PUBLIC_SUPABASE_* if this fails').toBeTruthy();

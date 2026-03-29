@@ -92,12 +92,30 @@
   "footer": {
     "description": "Votre destination pour des recettes philippines authentiques et une inspiration culinaire.",
     "quickLinks": "Liens Rapides",
+    "legalHeading": "Mentions légales",
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfUse": "Conditions d’utilisation",
+    "disclaimer": "Avertissement",
+    "cookiePolicy": "Politique de cookies",
     "followUs": "Suivez-nous",
     "newsletter": "Infolettre",
     "newsletterText": "Abonnez-vous pour de nouvelles recettes et conseils de cuisine",
     "subscribe": "S'abonner",
     "emailPlaceholder": "Entrez votre courriel",
     "copyright": "Tous droits réservés."
+  },
+  "legal": {
+    "lastUpdated": "Dernière mise à jour",
+    "lastUpdatedDate": "28 mars 2026",
+    "attorneyReview": "Ce contenu vise une conformité générale et ne constitue pas un avis juridique. Faites reviser ces textes par un professionnel du droit selon votre territoire et votre activité.",
+    "cookieBanner": {
+      "title": "Cookies et mesure d’audience",
+      "body": "Nous utilisons des cookies essentiels au fonctionnement du site. Si vous choisissez « Tout accepter », nous utilisons aussi des outils d’analyse (p. ex. Vercel Analytics). Vous pouvez réinitialiser votre choix en effaçant les données du site pour ce domaine. Pour en savoir plus :",
+      "acceptAll": "Tout accepter",
+      "essentialOnly": "Essentiels uniquement",
+      "privacyLink": "Politique de confidentialité",
+      "cookiePolicyLink": "Politique de cookies"
+    }
   },
   "admin": {
     "dashboard": "Tableau de bord",

@@ -92,12 +92,30 @@
   "footer": {
     "description": "Your destination for authentic Filipino recipes and culinary inspiration.",
     "quickLinks": "Quick Links",
+    "legalHeading": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfUse": "Terms of Use",
+    "disclaimer": "Disclaimer",
+    "cookiePolicy": "Cookie Policy",
     "followUs": "Follow Us",
     "newsletter": "Newsletter",
     "newsletterText": "Subscribe for new recipes and cooking tips",
     "subscribe": "Subscribe",
     "emailPlaceholder": "Enter your email",
     "copyright": "All rights reserved."
+  },
+  "legal": {
+    "lastUpdated": "Last updated",
+    "lastUpdatedDate": "March 28, 2026",
+    "attorneyReview": "This information supports general compliance and is not legal advice. Have qualified counsel review these documents for your jurisdiction and operations.",
+    "cookieBanner": {
+      "title": "Cookies and audience measurement",
+      "body": "We use essential cookies so the site can function. If you choose Accept all, we also use analytics to understand traffic and performance (for example Vercel Analytics). You can reset your choice by clearing site data for this domain. More information:",
+      "acceptAll": "Accept all",
+      "essentialOnly": "Essential only",
+      "privacyLink": "Privacy policy",
+      "cookiePolicyLink": "Cookie policy"
+    }
   },
   "admin": {
     "dashboard": "Dashboard",

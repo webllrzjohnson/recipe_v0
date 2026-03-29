@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { headers } from 'next/headers';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAnonServerClient } from '@/lib/supabase/anon-server';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { RecipeCard } from '@/components/recipes/recipe-card';
@@ -18,7 +18,10 @@ import type { Recipe, Category } from '@/lib/types/database';
 import { buildPageMetadata } from '@/lib/seo/build-page-metadata';
 import { recipeAlternatePathnames } from '@/lib/seo/entity-paths';
 import { RecipeJsonLd } from '@/components/seo/recipe-json-ld';
-import { fetchPublishedRecipeByUrlSlug } from '@/lib/supabase/fetch-by-url-slug';
+import {
+  fetchPublishedRecipeByUrlSlug,
+  normalizeUrlSlug,
+} from '@/lib/supabase/fetch-by-url-slug';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,8 +33,9 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale, slug } = await params;
-  const supabase = await createClient();
+  const { locale, slug: rawSlug } = await params;
+  const slug = normalizeUrlSlug(rawSlug);
+  const supabase = createAnonServerClient();
   const tCommon = await getTranslations({ locale, namespace: 'common' });
 
   const { data: recipe, error } = await fetchPublishedRecipeByUrlSlug(
@@ -71,12 +75,13 @@ export default async function RecipeDetailPage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale, slug } = await params;
+  const { locale, slug: rawSlug } = await params;
+  const slug = normalizeUrlSlug(rawSlug);
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'recipe' });
   const tCommon = await getTranslations({ locale, namespace: 'common' });
 
-  const supabase = await createClient();
+  const supabase = createAnonServerClient();
 
   const { data: recipeData, error: recipeError } =
     await fetchPublishedRecipeByUrlSlug(supabase, slug);
@@ -166,6 +171,7 @@ export default async function RecipeDetailPage({
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 448px"
                       priority
+                      loading="eager"
                     />
                   </div>
                 </div>

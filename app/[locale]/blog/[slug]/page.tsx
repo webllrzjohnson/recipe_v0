@@ -1,7 +1,8 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAnonServerClient } from '@/lib/supabase/anon-server';
+import { normalizeUrlSlug } from '@/lib/supabase/fetch-by-url-slug';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { BlogPostBody } from '@/components/blog/blog-post-body';
@@ -17,8 +18,9 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale, slug } = await params;
-  const supabase = await createClient();
+  const { locale, slug: rawSlug } = await params;
+  const slug = normalizeUrlSlug(rawSlug);
+  const supabase = createAnonServerClient();
   const tCommon = await getTranslations({ locale, namespace: 'common' });
 
   const { data: row } = await supabase
@@ -62,11 +64,12 @@ export default async function BlogPostPage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { locale, slug } = await params;
+  const { locale, slug: rawSlug } = await params;
+  const slug = normalizeUrlSlug(rawSlug);
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'blogPage' });
 
-  const supabase = await createClient();
+  const supabase = createAnonServerClient();
 
   const { data: row, error } = await supabase
     .from('blog_posts')
@@ -125,6 +128,7 @@ export default async function BlogPostPage({
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 720px"
                   priority
+                  loading="eager"
                 />
               </div>
             ) : null}

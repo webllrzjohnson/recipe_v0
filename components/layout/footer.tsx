@@ -13,6 +13,13 @@ export function Footer() {
     { href: '/about', label: t('common.about') },
   ];
 
+  const legalLinks = [
+    { href: '/privacy', label: t('footer.privacyPolicy') },
+    { href: '/terms', label: t('footer.termsOfUse') },
+    { href: '/disclaimer', label: t('footer.disclaimer') },
+    { href: '/cookies', label: t('footer.cookiePolicy') },
+  ];
+
   const socialLinks = [
     { icon: Facebook, href: '#', label: 'Facebook' },
     { icon: Instagram, href: '#', label: 'Instagram' },
@@ -43,6 +50,24 @@ export function Footer() {
             </h3>
             <nav className="flex flex-col gap-2">
               {quickLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h3 className="mb-4 font-serif text-lg font-semibold text-foreground">
+              {t('footer.legalHeading')}
+            </h3>
+            <nav className="flex flex-col gap-2">
+              {legalLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}

@@ -58,6 +58,8 @@ export function HeroSection() {
               width={1200}
               height={675}
               className="h-full w-full object-cover"
+              priority
+              loading="eager"
             />
           </div>
           {/* Decorative accent */}

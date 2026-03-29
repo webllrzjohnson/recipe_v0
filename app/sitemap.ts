@@ -72,6 +72,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     });
 
+    for (const legalPath of ['/privacy', '/terms', '/disclaimer', '/cookies']) {
+      entries.push({
+        url: `${prefix}${legalPath}`,
+        lastModified: new Date(),
+        changeFrequency: 'yearly',
+        priority: 0.35,
+      });
+    }
+
     entries.push({
       url: `${prefix}/blog`,
       lastModified: new Date(),
