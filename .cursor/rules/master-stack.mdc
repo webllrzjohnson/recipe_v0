@@ -1,3 +1,8 @@
+---
+description: Master Chief stack — Next.js, Tailwind, Supabase, shadcn, Vercel AI, Resend, Stripe
+alwaysApply: true
+---
+
 # ============================================================
 # CURSOR RULES — Master Chief's Stack
 # Next.js · Tailwind · Supabase · Vercel · TypeScript
@@ -79,7 +84,7 @@
 - Never use `any` — always define proper types or interfaces
 - Use `type` for simple shapes, `interface` for component props
 - Assume `"strict": true` in tsconfig
-- Always type Supabase responses using generated DB types from `@/types/supabase`
+- Always type Supabase responses using generated DB types from `@/lib/types/database` and/or `@/types/supabase` as present in the repo
 - Let TypeScript infer where it safely can — don't over-annotate obvious types
 - Always use path aliases — @/components, @/lib, @/types — never relative paths like ../../../
 
@@ -170,8 +175,9 @@
 # lib/supabase/         → server.ts and client.ts Supabase clients
 # lib/stripe/           → Stripe client setup
 # lib/resend/           → Resend client and email templates
+# scripts/              → SQL schema, seeds, RLS/storage, incremental migrations
 # types/                → Global TypeScript types
-# types/supabase.ts     → Generated Supabase DB types
+# types/supabase.ts     → Generated Supabase DB types (if present)
 # public/               → Static assets only
 # e2e/                  → Playwright end-to-end tests
 
@@ -235,7 +241,8 @@
 # ─────────────────────────────────────────
 # 20. TYPOGRAPHY
 # ─────────────────────────────────────────
-- Always load fonts via next/font — never CDN links or CSS @import
+- Prefer next/font for fixed site fonts — avoid ad hoc CDN `@import` for defaults
+- **This repo (Sarap Kitchen):** admin-selected font pairs inject a Google Fonts `<link>` from `getSiteAppearance()` in root `app/layout.tsx`, with CSS variables in `app/globals.css` driven by `@/lib/site/theme-presets` — do not rip this out for next/font-only without an explicit decision
 - Stick to Tailwind's type scale only — no arbitrary sizes like text-[17px]
 - Body text: leading-relaxed minimum at all times
 - Long-form content: max-w-prose to cap reading width
@@ -277,10 +284,10 @@
 # ─────────────────────────────────────────
 # 25. TESTING
 # ─────────────────────────────────────────
-- Jest for unit tests — colocate as ComponentName.test.tsx
+- Vitest for unit tests (this repo) — colocate as `*.test.ts` / `*.test.tsx`
 - Playwright for end-to-end tests — store in /e2e folder
 - Write testable code: pure functions, small components, no side effects in renders
-- Test files mirror source file names: user-card.tsx → user-card.test.tsx
+- Test files mirror source file names where practical
 
 # ─────────────────────────────────────────
 # 26. ACCESSIBILITY
@@ -290,6 +297,24 @@
 - Every image needs meaningful alt text — empty only if purely decorative
 - ARIA labels on all icon-only buttons
 - Minimum contrast: 4.5:1 for body text, 3:1 for large text
+
+# ─────────────────────────────────────────
+# 27. THIS REPOSITORY — recipe_V0 / Sarap Kitchen
+# ─────────────────────────────────────────
+- Public pages with `Header` / `Footer`: load `{ siteName, siteTagline }` via `getSiteBrand()` from `@/lib/site/get-site-appearance` and pass both props. Theme, favicon, and fonts use `getSiteAppearance()` in `app/layout.tsx`.
+- SQL: authoritative `scripts/schema.sql`; fresh DB `scripts/install_fresh_database.sql`; seeds `scripts/seed.sql`; incremental patches under `scripts/*.sql` and mirror in `scripts/legacy_schema_patches.sql` when applicable. RLS + storage: `scripts/rls_and_storage.sql`.
+- Admin site branding: `app/admin/settings`, `SiteBrandingForm`; uploads stay consistent with `lib/supabase/cms-uploads-bucket.ts`.
+- After non-trivial changes: run `npx tsc --noEmit`; broad changes also `npx next build`.
+
+# ─────────────────────────────────────────
+# 28. ADMIN & LEGAL — DEFAULT FOR NEW PROJECTS
+# ─────────────────────────────────────────
+- **Admin as the product console:** Every new project ships with a **protected admin area** (middleware + Supabase session) as the standard place to manage content and settings — not ad hoc scripts or direct DB edits for routine work.
+- **Consistent admin UX:** Reuse the same patterns across features: shell layout with sidebar (or equivalent nav), section titles, list + create/edit flows, **react-hook-form + Zod**, sonner toasts, loading/empty states, confirmation dialogs for destructive actions.
+- **Site settings hub:** Include an admin **settings / branding** page for site name, tagline, theme (colors/fonts) and favicon when applicable; drive the public shell (header, footer, root metadata) from that data where it fits the architecture.
+- **Feature admin pages:** Add a **dedicated admin section per major surface** (e.g. blog, categories, static/CMS pages, ads) aligned with public IA. **Do not** add recipe-specific CRUD or admin unless the product is explicitly a recipes site.
+- **Required legal routes:** Ship public routes for **Privacy Policy** (`/privacy`), **Terms of Use** (`/terms`), **Disclaimer** (`/disclaimer`), and **Cookie Policy** (`/cookies`). Copy via `messages/en.json` / `@/lib/copy`; link them in the **footer** and auth/sign-up flows as appropriate. Prefer editable content (admin or CMS) if the project already uses that pattern.
+- **Legal metadata:** Each legal page uses the **Metadata API** (title, description); show last-updated when relevant; avoid thin duplicate indexable URLs.
 
 # ─────────────────────────────────────────
 # ENVIRONMENT VARIABLES — NEW PROJECT TEMPLATE
@@ -313,5 +338,3 @@
 #
 # SENTRY_DSN=
 # NEXT_PUBLIC_SENTRY_DSN=
-
-
